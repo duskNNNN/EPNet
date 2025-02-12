@@ -1,0 +1,54 @@
+2024-12-29 16:10:45,790 - Model - INFO - PARAMETER ...
+2024-12-29 16:10:45,792 - Model - INFO - {
+    gpu: "2",
+    model: "EPNet",
+    batch_size: 4,
+    epoch: 300,
+    learning_rate: 0.001,
+    optimizer: "AdamW",
+    schedule: "StepLR",
+    logdir: "LPNet_LVPC_no_punish",
+    step_size: 20,
+    decay_rate: 0.0001,
+    npoint: 102400,
+    is_normal: 1,
+    lr_decay: 0.5,
+    seed: 42,
+    workers: 10,
+    num_votes: 3,
+    presample_method: "Origin",
+    sample_method: "Origin",
+    loss: "NLLLoss",
+    datapath: "data/PartSeg/LVPC",
+    classes: 1,
+    parts: 18,
+    content: {
+        Car: [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+        ],
+    },
+}
+2024-12-29 16:10:45,813 - Model - INFO - The number of test data is: 45
+2024-12-29 16:11:06,830 - Model - INFO - eval mIoU of Car            0.819688
+2024-12-29 16:11:06,831 - Model - INFO - Accuracy is: 0.93018
+2024-12-29 16:11:06,831 - Model - INFO - Class avg accuracy is: 0.86566
+2024-12-29 16:11:06,831 - Model - INFO - instance avg mIOU is: 0.81969
+2024-12-29 16:11:06,831 - Model - INFO - Class avg mIOU is: 0.81969
+spend 21.150984287261963s, average 0.4700218730502658s
