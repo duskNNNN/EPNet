@@ -1,0 +1,43 @@
+{
+    "gpu": "0",
+    // choices: 
+    "model":"EPNet",
+    // npoints 100000->4,2048->34
+    "batch_size": 4,
+    "epoch": 300,
+    "learning_rate": 0.001,
+    // choices: "AdamW","Adam","SGD"
+    "optimizer": "AdamW", 
+    // lr schedule
+    // choices: "CosineAnnealingWarmRestarts","StepLR","CosineAnnealingLR",""LinearCyclicLR"
+    "schedule": "StepLR",
+    "logdir": "EPNet_LVPC",
+    "step_size": 20,
+    // weight decay
+    "decay_rate": 1e-4,
+    // point Number
+    "npoint": 102400,
+    // 1->True,0->False
+    "is_normal": 1,
+    // decay rate for lr decay
+    "lr_decay": 0.5,
+    // random seed
+    "seed": 42,
+    // num workers
+    "workers": 10,
+    "num_votes": 3,
+    // "Origin","VGD","FPS"
+    "presample_method": "Origin",
+    // data sample method
+    // choices: "Origin","Pyramid"
+    "sample_method": "Origin",
+    // choices: "NLLLoss","CrossEntropyLoss"
+    "loss":"NLLLoss",
+    // dataset path
+    "datapath": "data/PartSeg/LVPC",
+    "classes": 1,
+    "parts": 18,
+    "content":{
+        "Car": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17]
+    }
+}

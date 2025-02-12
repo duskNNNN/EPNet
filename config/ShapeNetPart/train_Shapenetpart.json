@@ -1,0 +1,55 @@
+{
+    "gpu": "0,1,2,3",
+    "model":"EPNet",
+    // npoints 100000->4,2048->34
+    "batch_size": 32,
+    "epoch": 300,
+    "learning_rate": 0.001,
+    "gamma": 0.93,
+    // choices: "AdamW","Adam","SGD"
+    "optimizer": "AdamW",   
+    "logdir": "EPNet_shapenetpart",
+    "schedule": "StepLR",
+    "step_size": 20,
+    // weight decay
+    "decay_rate": 1e-4,
+    // point Number
+    "npoint": 2048,
+    // 1->True,0->False
+    "is_normal": 1,
+    // decay rate for lr decay
+    "lr_decay": 0.5,
+    // random seed 42
+    "seed": 42,
+    // num workers
+    "workers": 10,
+    // "Origin","VGD","FPS"
+    "presample_method": "Origin",
+    // data sample method
+    // choices: "Origin","Pyramid","LeaseRandom"
+    "sample_method": "Origin",
+    // choices: "NLLLoss","CrossEntropyLoss"
+    "loss":"NLLLoss",
+    // dataset path
+    "datapath": "data/PartSeg/shapenetcore_partanno_segmentation_benchmark_v0_normal",
+    "classes": 16,
+    "parts": 50,
+    "content":{
+        "Earphone": [16,17,18], 
+        "Motorbike": [30,31,32,33,34,35], 
+        "Rocket": [41,42,43],
+        "Car": [8,9,10,11], 
+        "Laptop": [28,29], 
+        "Cap": [6,7], 
+        "Skateboard": [44,45,46], 
+        "Mug": [36,37],
+        "Guitar": [19,20,21], 
+        "Bag": [4,5], 
+        "Lamp": [24,25,26,27],
+        "Table": [47,48,49],
+        "Airplane": [0,1,2,3], 
+        "Pistol": [38,39,40], 
+        "Chair": [12,13,14,15], 
+        "Knife": [22,23]
+    }
+}
