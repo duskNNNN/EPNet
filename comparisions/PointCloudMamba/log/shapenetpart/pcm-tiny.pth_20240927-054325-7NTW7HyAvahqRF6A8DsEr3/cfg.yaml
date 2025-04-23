@@ -1,0 +1,214 @@
+!!python/object/new:openpoints.utils.config.EasyConfig
+dictitems:
+  batch_size: 100
+  cfg_basename: PCM-Tiny
+  ckpt_dir: log/shapenetpart/pcm-tiny.pth_20240927-054325-7NTW7HyAvahqRF6A8DsEr3/checkpoint
+  code_dir: log/shapenetpart/pcm-tiny.pth_20240927-054325-7NTW7HyAvahqRF6A8DsEr3/code
+  criterion_args: !!python/object/new:openpoints.utils.config.EasyConfig
+    dictitems:
+      NAME: Poly1FocalLoss
+  dataloader: !!python/object/new:openpoints.utils.config.EasyConfig
+    dictitems:
+      num_workers: 6
+  dataset: !!python/object/new:openpoints.utils.config.EasyConfig
+    dictitems:
+      common: !!python/object/new:openpoints.utils.config.EasyConfig
+        dictitems:
+          NAME: ShapeNetPartNormal
+          data_root: data/ShapeNetPart/shapenetcore_partanno_segmentation_benchmark_v0_normal
+          num_points: 2048
+          use_normal: true
+      train: !!python/object/new:openpoints.utils.config.EasyConfig
+        dictitems:
+          split: trainval
+      val: !!python/object/new:openpoints.utils.config.EasyConfig
+        dictitems:
+          presample: true
+          split: test
+  datatransforms: !!python/object/new:openpoints.utils.config.EasyConfig
+    dictitems:
+      kwargs: !!python/object/new:openpoints.utils.config.EasyConfig
+        dictitems:
+          angle:
+          - 0
+          - 1.0
+          - 0
+          gravity_dim: 1
+          jitter_clip: 0.005
+          jitter_sigma: 0.001
+          scale:
+          - 0.8
+          - 1.2
+      train:
+      - PointsToTensor
+      - PointCloudScaling
+      - PointCloudCenterAndNormalize
+      - PointCloudJitter
+      - ChromaticDropGPU
+      val:
+      - PointsToTensor
+      - PointCloudCenterAndNormalize
+      vote:
+      - PointCloudScaling
+  decay_epochs:
+  - 210
+  - 270
+  decay_rate: 0.5
+  deterministic: false
+  dist_backend: nccl
+  dist_url: tcp://localhost:8888
+  distributed: false
+  epoch: 0
+  epochs: 300
+  feature_keys: pos,x,heights
+  finetune: false
+  grad_norm_clip: 1
+  ignore_index: null
+  is_training: false
+  launcher: mp
+  layer_decay: 0
+  load_path: null
+  local_rank: 0
+  log_dir: log/shapenetpart/pcm-tiny.pth_20240927-054325-7NTW7HyAvahqRF6A8DsEr3
+  log_path: log/shapenetpart/pcm-tiny.pth_20240927-054325-7NTW7HyAvahqRF6A8DsEr3/pcm-tiny.pth_20240927-054325-7NTW7HyAvahqRF6A8DsEr3.log
+  logname: null
+  lr: 0.0001
+  min_lr: 1.0e-05
+  mode: test
+  model: !!python/object/new:openpoints.utils.config.EasyConfig
+    dictitems:
+      NAME: BasePartSeg
+      cls_args: !!python/object/new:openpoints.utils.config.EasyConfig
+        dictitems:
+          NAME: SegHead
+          global_feat: max,avg
+          in_channels: null
+          norm_args: !!python/object/new:openpoints.utils.config.EasyConfig
+            dictitems:
+              norm: bn
+          num_classes: 50
+      decoder_args: !!python/object/new:openpoints.utils.config.EasyConfig
+        dictitems:
+          NAME: PointMambaPartDecoder
+          decoder_blocks:
+          - 1
+          - 1
+          - 1
+          - 1
+          decoder_channel_list:
+          - 384
+          - 192
+          - 192
+          - 192
+          encoder_channel_list:
+          - 192
+          - 192
+          - 192
+          - 384
+          - 384
+          mamba_blocks:
+          - 0
+          - 0
+          - 0
+          - 0
+          mamba_layers_orders: []
+      encoder_args: !!python/object/new:openpoints.utils.config.EasyConfig
+        dictitems:
+          NAME: PointMambaEncoder
+          activation: relu
+          bias: false
+          bimamba_type: v2
+          dim_expansion:
+          - 1
+          - 1
+          - 2
+          - 1
+          drop_path_rate: 0.1
+          embed_dim: 192
+          fused_add_norm: true
+          groups: 1
+          in_channels: 7
+          k_neighbors:
+          - 12
+          - 12
+          - 12
+          - 12
+          mamba_blocks:
+          - 1
+          - 1
+          - 2
+          - 2
+          mamba_layers_orders:
+          - xyz
+          - xzy
+          - yxz
+          - yzx
+          - zxy
+          - zyx
+          mamba_pos: true
+          normalize: anchor
+          pos_blocks:
+          - 0
+          - 0
+          - 0
+          - 0
+          pre_blocks:
+          - 1
+          - 1
+          - 1
+          - 1
+          prompt_num_per_order: 6
+          reducers:
+          - 2
+          - 2
+          - 2
+          - 2
+          res_expansion: 1.0
+          residual_in_fp32: true
+          rms_norm: true
+          use_order_prompt: true
+          use_xyz: true
+  mp: false
+  multiprocessing_distributed: false
+  ngpus_per_node: 1
+  normal_channel: true
+  num_classes: 50
+  num_points: 2048
+  num_votes: 10
+  optimizer: !!python/object/new:openpoints.utils.config.EasyConfig
+    dictitems:
+      NAME: adamw
+      weight_decay: 0.05
+  opts: mode=test
+  pretrained_path: PCM/shapenetpart/pcm-tiny.pth
+  print_freq: 10
+  rank: 0
+  refine: true
+  resume: false
+  root_dir: log/shapenetpart
+  run_dir: log/shapenetpart/pcm-tiny.pth_20240927-054325-7NTW7HyAvahqRF6A8DsEr3
+  run_name: pcm-tiny.pth_20240927-054325-7NTW7HyAvahqRF6A8DsEr3
+  save_freq: -1
+  sched: multistep
+  sched_on_epoch: true
+  seed: 819
+  shape_classes: 16
+  start_epoch: 1
+  step_per_update: 1
+  sync_bn: false
+  task_name: shapenetpart
+  test: false
+  use_amp: false
+  use_gpu: true
+  use_mask: false
+  use_voting: false
+  val_fn: validate
+  val_freq: 1
+  wandb: !!python/object/new:openpoints.utils.config.EasyConfig
+    dictitems:
+      project: PointNext-ShapeNetPart
+      tags:
+      - test
+      use_wandb: false
+  warmup_epochs: 5
+  world_size: 1

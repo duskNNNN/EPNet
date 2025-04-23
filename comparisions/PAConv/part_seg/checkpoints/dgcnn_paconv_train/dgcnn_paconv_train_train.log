@@ -1,0 +1,460 @@
+batch_size: 4
+calc_scores: softmax
+dropout: 0.4
+epochs: 300
+eval: False
+exp_name: dgcnn_paconv_train
+hidden: [[16, 16, 16], [16, 16, 16], [16, 16, 16], [16, 16, 16]]
+k_neighbors: 30
+lr: 0.003
+manual_seed: 0
+momentum: 0.9
+no_cuda: False
+num_matrices: [8, 8, 8, 8]
+num_points: 102400
+scheduler: step
+step: 40
+test_batch_size: 4
+use_sgd: False
+weight_decay: 0
+workers: 6
+Using GPU
+PAConv(
+  (scorenet2): ScoreNet(
+    (mlp_convs_hidden): ModuleList(
+      (0): Conv2d(10, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (1): Conv2d(16, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (2): Conv2d(16, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (3): Conv2d(16, 8, kernel_size=(1, 1), stride=(1, 1))
+    )
+    (mlp_bns_hidden): ModuleList(
+      (0): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (1): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (3): BatchNorm2d(8, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (scorenet3): ScoreNet(
+    (mlp_convs_hidden): ModuleList(
+      (0): Conv2d(10, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (1): Conv2d(16, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (2): Conv2d(16, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (3): Conv2d(16, 8, kernel_size=(1, 1), stride=(1, 1))
+    )
+    (mlp_bns_hidden): ModuleList(
+      (0): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (1): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (3): BatchNorm2d(8, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (scorenet4): ScoreNet(
+    (mlp_convs_hidden): ModuleList(
+      (0): Conv2d(10, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (1): Conv2d(16, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (2): Conv2d(16, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (3): Conv2d(16, 8, kernel_size=(1, 1), stride=(1, 1))
+    )
+    (mlp_bns_hidden): ModuleList(
+      (0): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (1): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (3): BatchNorm2d(8, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (scorenet5): ScoreNet(
+    (mlp_convs_hidden): ModuleList(
+      (0): Conv2d(10, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (1): Conv2d(16, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (2): Conv2d(16, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (3): Conv2d(16, 8, kernel_size=(1, 1), stride=(1, 1))
+    )
+    (mlp_bns_hidden): ModuleList(
+      (0): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (1): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (3): BatchNorm2d(8, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (bn2): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (bn3): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (bn4): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (bn5): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (bnt): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (bnc): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (bn6): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (bn7): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (bn8): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (conv1): Sequential(
+    (0): Conv2d(6, 64, kernel_size=(1, 1), stride=(1, 1))
+    (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (convt): Sequential(
+    (0): Conv1d(320, 1024, kernel_size=(1,), stride=(1,), bias=False)
+    (1): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (convc): Sequential(
+    (0): Conv1d(16, 64, kernel_size=(1,), stride=(1,), bias=False)
+    (1): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (conv6): Sequential(
+    (0): Conv1d(1408, 256, kernel_size=(1,), stride=(1,), bias=False)
+    (1): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (dp1): Dropout(p=0.4, inplace=False)
+  (conv7): Sequential(
+    (0): Conv1d(256, 256, kernel_size=(1,), stride=(1,), bias=False)
+    (1): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (dp2): Dropout(p=0.4, inplace=False)
+  (conv8): Sequential(
+    (0): Conv1d(256, 128, kernel_size=(1,), stride=(1,), bias=False)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (conv9): Conv1d(128, 18, kernel_size=(1,), stride=(1,))
+)
+batch_size: 4
+calc_scores: softmax
+dropout: 0.4
+epochs: 300
+eval: False
+exp_name: dgcnn_paconv_train
+hidden: [[16, 16, 16], [16, 16, 16], [16, 16, 16], [16, 16, 16]]
+k_neighbors: 30
+lr: 0.003
+manual_seed: 0
+momentum: 0.9
+no_cuda: False
+num_matrices: [8, 8, 8, 8]
+num_points: 102400
+scheduler: step
+step: 40
+test_batch_size: 4
+use_sgd: False
+weight_decay: 0
+workers: 6
+Using GPU
+PAConv(
+  (scorenet2): ScoreNet(
+    (mlp_convs_hidden): ModuleList(
+      (0): Conv2d(10, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (1): Conv2d(16, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (2): Conv2d(16, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (3): Conv2d(16, 8, kernel_size=(1, 1), stride=(1, 1))
+    )
+    (mlp_bns_hidden): ModuleList(
+      (0): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (1): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (3): BatchNorm2d(8, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (scorenet3): ScoreNet(
+    (mlp_convs_hidden): ModuleList(
+      (0): Conv2d(10, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (1): Conv2d(16, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (2): Conv2d(16, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (3): Conv2d(16, 8, kernel_size=(1, 1), stride=(1, 1))
+    )
+    (mlp_bns_hidden): ModuleList(
+      (0): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (1): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (3): BatchNorm2d(8, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (scorenet4): ScoreNet(
+    (mlp_convs_hidden): ModuleList(
+      (0): Conv2d(10, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (1): Conv2d(16, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (2): Conv2d(16, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (3): Conv2d(16, 8, kernel_size=(1, 1), stride=(1, 1))
+    )
+    (mlp_bns_hidden): ModuleList(
+      (0): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (1): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (3): BatchNorm2d(8, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (scorenet5): ScoreNet(
+    (mlp_convs_hidden): ModuleList(
+      (0): Conv2d(10, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (1): Conv2d(16, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (2): Conv2d(16, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (3): Conv2d(16, 8, kernel_size=(1, 1), stride=(1, 1))
+    )
+    (mlp_bns_hidden): ModuleList(
+      (0): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (1): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (3): BatchNorm2d(8, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (bn2): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (bn3): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (bn4): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (bn5): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (bnt): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (bnc): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (bn6): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (bn7): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (bn8): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (conv1): Sequential(
+    (0): Conv2d(6, 64, kernel_size=(1, 1), stride=(1, 1))
+    (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (convt): Sequential(
+    (0): Conv1d(320, 1024, kernel_size=(1,), stride=(1,), bias=False)
+    (1): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (convc): Sequential(
+    (0): Conv1d(16, 64, kernel_size=(1,), stride=(1,), bias=False)
+    (1): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (conv6): Sequential(
+    (0): Conv1d(1408, 256, kernel_size=(1,), stride=(1,), bias=False)
+    (1): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (dp1): Dropout(p=0.4, inplace=False)
+  (conv7): Sequential(
+    (0): Conv1d(256, 256, kernel_size=(1,), stride=(1,), bias=False)
+    (1): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (dp2): Dropout(p=0.4, inplace=False)
+  (conv8): Sequential(
+    (0): Conv1d(256, 128, kernel_size=(1,), stride=(1,), bias=False)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (conv9): Conv1d(128, 18, kernel_size=(1,), stride=(1,))
+)
+batch_size: 2
+calc_scores: softmax
+dropout: 0.4
+epochs: 300
+eval: False
+exp_name: dgcnn_paconv_train
+hidden: [[16, 16, 16], [16, 16, 16], [16, 16, 16], [16, 16, 16]]
+k_neighbors: 30
+lr: 0.003
+manual_seed: 0
+momentum: 0.9
+no_cuda: False
+num_matrices: [8, 8, 8, 8]
+num_points: 102400
+scheduler: step
+step: 40
+test_batch_size: 2
+use_sgd: False
+weight_decay: 0
+workers: 6
+Using GPU
+PAConv(
+  (scorenet2): ScoreNet(
+    (mlp_convs_hidden): ModuleList(
+      (0): Conv2d(10, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (1): Conv2d(16, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (2): Conv2d(16, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (3): Conv2d(16, 8, kernel_size=(1, 1), stride=(1, 1))
+    )
+    (mlp_bns_hidden): ModuleList(
+      (0): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (1): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (3): BatchNorm2d(8, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (scorenet3): ScoreNet(
+    (mlp_convs_hidden): ModuleList(
+      (0): Conv2d(10, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (1): Conv2d(16, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (2): Conv2d(16, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (3): Conv2d(16, 8, kernel_size=(1, 1), stride=(1, 1))
+    )
+    (mlp_bns_hidden): ModuleList(
+      (0): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (1): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (3): BatchNorm2d(8, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (scorenet4): ScoreNet(
+    (mlp_convs_hidden): ModuleList(
+      (0): Conv2d(10, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (1): Conv2d(16, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (2): Conv2d(16, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (3): Conv2d(16, 8, kernel_size=(1, 1), stride=(1, 1))
+    )
+    (mlp_bns_hidden): ModuleList(
+      (0): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (1): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (3): BatchNorm2d(8, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (scorenet5): ScoreNet(
+    (mlp_convs_hidden): ModuleList(
+      (0): Conv2d(10, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (1): Conv2d(16, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (2): Conv2d(16, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (3): Conv2d(16, 8, kernel_size=(1, 1), stride=(1, 1))
+    )
+    (mlp_bns_hidden): ModuleList(
+      (0): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (1): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (3): BatchNorm2d(8, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (bn2): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (bn3): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (bn4): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (bn5): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (bnt): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (bnc): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (bn6): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (bn7): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (bn8): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (conv1): Sequential(
+    (0): Conv2d(6, 64, kernel_size=(1, 1), stride=(1, 1))
+    (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (convt): Sequential(
+    (0): Conv1d(320, 1024, kernel_size=(1,), stride=(1,), bias=False)
+    (1): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (convc): Sequential(
+    (0): Conv1d(16, 64, kernel_size=(1,), stride=(1,), bias=False)
+    (1): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (conv6): Sequential(
+    (0): Conv1d(1408, 256, kernel_size=(1,), stride=(1,), bias=False)
+    (1): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (dp1): Dropout(p=0.4, inplace=False)
+  (conv7): Sequential(
+    (0): Conv1d(256, 256, kernel_size=(1,), stride=(1,), bias=False)
+    (1): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (dp2): Dropout(p=0.4, inplace=False)
+  (conv8): Sequential(
+    (0): Conv1d(256, 128, kernel_size=(1,), stride=(1,), bias=False)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (conv9): Conv1d(128, 18, kernel_size=(1,), stride=(1,))
+)
+batch_size: 1
+calc_scores: softmax
+dropout: 0.4
+epochs: 300
+eval: False
+exp_name: dgcnn_paconv_train
+hidden: [[16, 16, 16], [16, 16, 16], [16, 16, 16], [16, 16, 16]]
+k_neighbors: 30
+lr: 0.003
+manual_seed: 0
+momentum: 0.9
+no_cuda: False
+num_matrices: [8, 8, 8, 8]
+num_points: 102400
+scheduler: step
+step: 40
+test_batch_size: 1
+use_sgd: False
+weight_decay: 0
+workers: 6
+Using GPU
+PAConv(
+  (scorenet2): ScoreNet(
+    (mlp_convs_hidden): ModuleList(
+      (0): Conv2d(10, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (1): Conv2d(16, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (2): Conv2d(16, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (3): Conv2d(16, 8, kernel_size=(1, 1), stride=(1, 1))
+    )
+    (mlp_bns_hidden): ModuleList(
+      (0): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (1): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (3): BatchNorm2d(8, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (scorenet3): ScoreNet(
+    (mlp_convs_hidden): ModuleList(
+      (0): Conv2d(10, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (1): Conv2d(16, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (2): Conv2d(16, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (3): Conv2d(16, 8, kernel_size=(1, 1), stride=(1, 1))
+    )
+    (mlp_bns_hidden): ModuleList(
+      (0): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (1): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (3): BatchNorm2d(8, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (scorenet4): ScoreNet(
+    (mlp_convs_hidden): ModuleList(
+      (0): Conv2d(10, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (1): Conv2d(16, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (2): Conv2d(16, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (3): Conv2d(16, 8, kernel_size=(1, 1), stride=(1, 1))
+    )
+    (mlp_bns_hidden): ModuleList(
+      (0): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (1): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (3): BatchNorm2d(8, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (scorenet5): ScoreNet(
+    (mlp_convs_hidden): ModuleList(
+      (0): Conv2d(10, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (1): Conv2d(16, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (2): Conv2d(16, 16, kernel_size=(1, 1), stride=(1, 1), bias=False)
+      (3): Conv2d(16, 8, kernel_size=(1, 1), stride=(1, 1))
+    )
+    (mlp_bns_hidden): ModuleList(
+      (0): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (1): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): BatchNorm2d(16, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (3): BatchNorm2d(8, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+  )
+  (bn2): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (bn3): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (bn4): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (bn5): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (bnt): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (bnc): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (bn6): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (bn7): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (bn8): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  (conv1): Sequential(
+    (0): Conv2d(6, 64, kernel_size=(1, 1), stride=(1, 1))
+    (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (convt): Sequential(
+    (0): Conv1d(320, 1024, kernel_size=(1,), stride=(1,), bias=False)
+    (1): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (convc): Sequential(
+    (0): Conv1d(16, 64, kernel_size=(1,), stride=(1,), bias=False)
+    (1): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (conv6): Sequential(
+    (0): Conv1d(1408, 256, kernel_size=(1,), stride=(1,), bias=False)
+    (1): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (dp1): Dropout(p=0.4, inplace=False)
+  (conv7): Sequential(
+    (0): Conv1d(256, 256, kernel_size=(1,), stride=(1,), bias=False)
+    (1): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (dp2): Dropout(p=0.4, inplace=False)
+  (conv8): Sequential(
+    (0): Conv1d(256, 128, kernel_size=(1,), stride=(1,), bias=False)
+    (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+  (conv9): Conv1d(128, 18, kernel_size=(1,), stride=(1,))
+)

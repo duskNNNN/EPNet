@@ -1,0 +1,724 @@
+[10/22 11:31:31] ShapeNetPartNormal INFO: dist_url: tcp://localhost:8888
+dist_backend: nccl
+multiprocessing_distributed: False
+ngpus_per_node: 1
+world_size: 1
+launcher: mp
+local_rank: 0
+use_gpu: True
+seed: 5725
+epoch: 0
+epochs: 300
+ignore_index: None
+val_fn: validate
+deterministic: False
+sync_bn: False
+criterion_args:
+  NAME: Poly1FocalLoss
+use_mask: False
+grad_norm_clip: 1
+layer_decay: 0
+step_per_update: 1
+start_epoch: 1
+sched_on_epoch: True
+wandb:
+  use_wandb: False
+  project: PointNext-ShapeNetPart
+  tags: ['shapenetpart', 'train', 'PCM-Tiny', 'ngpus1', 'seed5725']
+  name: shapenetpart-train-PCM-Tiny-ngpus1-seed5725-20241022-113131-eHuTP2J5yfkbph4G9FjLLF
+use_amp: False
+use_voting: False
+val_freq: 1
+resume: False
+test: False
+finetune: False
+mode: train
+logname: None
+load_path: None
+print_freq: 10
+save_freq: -1
+root_dir: log/shapenetpart
+pretrained_path: None
+datatransforms:
+  train: ['PointsToTensor', 'PointCloudScaling', 'PointCloudCenterAndNormalize', 'PointCloudJitter', 'ChromaticDropGPU']
+  val: ['PointsToTensor', 'PointCloudCenterAndNormalize']
+  vote: ['PointCloudScaling']
+  kwargs:
+    jitter_sigma: 0.001
+    jitter_clip: 0.005
+    scale: [0.8, 1.2]
+    gravity_dim: 1
+    angle: [0, 1.0, 0]
+feature_keys: pos,x,heights
+dataset:
+  common:
+    NAME: ShapeNetPartNormal
+    data_root: data/origin_segment_all_v3
+    use_normal: True
+    num_points: 102400
+  train:
+    split: trainval
+  val:
+    split: test
+    presample: True
+num_classes: 18
+shape_classes: 1
+num_points: 102400
+normal_channel: True
+batch_size: 1
+dataloader:
+  num_workers: 6
+num_votes: 10
+refine: True
+lr: 0.0001
+min_lr: 1e-05
+optimizer:
+  NAME: adamw
+  weight_decay: 0.05
+sched: multistep
+decay_epochs: [210, 270]
+decay_rate: 0.5
+warmup_epochs: 5
+model:
+  NAME: BasePartSeg
+  encoder_args:
+    NAME: PointMambaEncoder
+    in_channels: 7
+    embed_dim: 192
+    groups: 1
+    res_expansion: 1.0
+    activation: relu
+    bias: False
+    use_xyz: True
+    normalize: anchor
+    dim_expansion: [1, 1, 2, 1]
+    pre_blocks: [1, 1, 1, 1]
+    mamba_blocks: [1, 1, 2, 2]
+    pos_blocks: [0, 0, 0, 0]
+    k_neighbors: [12, 12, 12, 12]
+    reducers: [2, 2, 2, 2]
+    rms_norm: True
+    residual_in_fp32: True
+    fused_add_norm: True
+    bimamba_type: v2
+    drop_path_rate: 0.1
+    mamba_pos: True
+    mamba_layers_orders: ['xyz', 'xzy', 'yxz', 'yzx', 'zxy', 'zyx']
+    use_order_prompt: True
+    prompt_num_per_order: 6
+  decoder_args:
+    NAME: PointMambaPartDecoder
+    encoder_channel_list: [192, 192, 192, 384, 384]
+    decoder_channel_list: [384, 192, 192, 192]
+    decoder_blocks: [1, 1, 1, 1]
+    mamba_blocks: [0, 0, 0, 0]
+    mamba_layers_orders: []
+  cls_args:
+    NAME: SegHead
+    global_feat: max,avg
+    num_classes: 18
+    in_channels: None
+    norm_args:
+      norm: bn
+rank: 0
+distributed: False
+mp: False
+task_name: shapenetpart
+cfg_basename: PCM-Tiny
+opts: 
+is_training: True
+run_name: shapenetpart-train-PCM-Tiny-ngpus1-seed5725-20241022-113131-eHuTP2J5yfkbph4G9FjLLF
+run_dir: log/shapenetpart/shapenetpart-train-PCM-Tiny-ngpus1-seed5725-20241022-113131-eHuTP2J5yfkbph4G9FjLLF
+exp_dir: log/shapenetpart/shapenetpart-train-PCM-Tiny-ngpus1-seed5725-20241022-113131-eHuTP2J5yfkbph4G9FjLLF
+log_dir: log/shapenetpart/shapenetpart-train-PCM-Tiny-ngpus1-seed5725-20241022-113131-eHuTP2J5yfkbph4G9FjLLF
+ckpt_dir: log/shapenetpart/shapenetpart-train-PCM-Tiny-ngpus1-seed5725-20241022-113131-eHuTP2J5yfkbph4G9FjLLF/checkpoint
+log_path: log/shapenetpart/shapenetpart-train-PCM-Tiny-ngpus1-seed5725-20241022-113131-eHuTP2J5yfkbph4G9FjLLF/shapenetpart-train-PCM-Tiny-ngpus1-seed5725-20241022-113131-eHuTP2J5yfkbph4G9FjLLF.log
+cfg_path: log/shapenetpart/shapenetpart-train-PCM-Tiny-ngpus1-seed5725-20241022-113131-eHuTP2J5yfkbph4G9FjLLF/cfg.yaml
+[10/22 11:31:31] ShapeNetPartNormal INFO: length of validation dataset: 45
+[10/22 11:31:31] ShapeNetPartNormal INFO: number of classes of the dataset: None
+[10/22 11:31:31] ShapeNetPartNormal INFO: BasePartSeg(
+  (encoder): PointMambaEncoder(
+    (embedding): ConvBNReLU1D(
+      (act): ReLU(inplace=True)
+      (net): Sequential(
+        (0): Conv1d(7, 192, kernel_size=(1,), stride=(1,), bias=False)
+        (1): BatchNorm1d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace=True)
+      )
+    )
+    (order_prompt): Embedding(36, 384)
+    (pos_proj): ModuleList(
+      (0-1): 2 x Linear(in_features=3, out_features=192, bias=False)
+      (2-3): 2 x Linear(in_features=3, out_features=384, bias=False)
+    )
+    (local_grouper_list): ModuleList(
+      (0-3): 4 x LocalGrouper()
+    )
+    (pre_blocks_list): ModuleList(
+      (0-1): 2 x PreExtraction(
+        (transfer): ConvBNReLU1D(
+          (act): ReLU(inplace=True)
+          (net): Sequential(
+            (0): Conv1d(387, 192, kernel_size=(1,), stride=(1,), bias=False)
+            (1): BatchNorm1d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU(inplace=True)
+          )
+        )
+        (operation): Sequential(
+          (0): ConvBNReLURes1D(
+            (act): ReLU(inplace=True)
+            (net1): Sequential(
+              (0): Conv1d(192, 192, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (net2): Sequential(
+              (0): Conv1d(192, 192, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            )
+          )
+        )
+      )
+      (2): PreExtraction(
+        (transfer): ConvBNReLU1D(
+          (act): ReLU(inplace=True)
+          (net): Sequential(
+            (0): Conv1d(387, 384, kernel_size=(1,), stride=(1,), bias=False)
+            (1): BatchNorm1d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU(inplace=True)
+          )
+        )
+        (operation): Sequential(
+          (0): ConvBNReLURes1D(
+            (act): ReLU(inplace=True)
+            (net1): Sequential(
+              (0): Conv1d(384, 384, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (net2): Sequential(
+              (0): Conv1d(384, 384, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            )
+          )
+        )
+      )
+      (3): PreExtraction(
+        (transfer): ConvBNReLU1D(
+          (act): ReLU(inplace=True)
+          (net): Sequential(
+            (0): Conv1d(771, 384, kernel_size=(1,), stride=(1,), bias=False)
+            (1): BatchNorm1d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU(inplace=True)
+          )
+        )
+        (operation): Sequential(
+          (0): ConvBNReLURes1D(
+            (act): ReLU(inplace=True)
+            (net1): Sequential(
+              (0): Conv1d(384, 384, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (net2): Sequential(
+              (0): Conv1d(384, 384, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            )
+          )
+        )
+      )
+    )
+    (mamba_blocks_list): ModuleList(
+      (0-1): 2 x Sequential(
+        (0): MambaBlock(
+          (mixer): Mamba(
+            (in_proj): Linear(in_features=192, out_features=768, bias=False)
+            (conv1d): Conv1d(384, 384, kernel_size=(4,), stride=(1,), padding=(3,), groups=384)
+            (act): SiLU()
+            (x_proj): Linear(in_features=384, out_features=44, bias=False)
+            (dt_proj): Linear(in_features=12, out_features=384, bias=True)
+            (conv1d_b): Conv1d(384, 384, kernel_size=(4,), stride=(1,), padding=(3,), groups=384)
+            (x_proj_b): Linear(in_features=384, out_features=44, bias=False)
+            (dt_proj_b): Linear(in_features=12, out_features=384, bias=True)
+            (out_proj): Linear(in_features=384, out_features=192, bias=False)
+          )
+          (norm): RMSNorm()
+          (drop_path): Identity()
+        )
+      )
+      (2): Sequential(
+        (0): MambaBlock(
+          (mixer): Mamba(
+            (in_proj): Linear(in_features=384, out_features=1536, bias=False)
+            (conv1d): Conv1d(768, 768, kernel_size=(4,), stride=(1,), padding=(3,), groups=768)
+            (act): SiLU()
+            (x_proj): Linear(in_features=768, out_features=56, bias=False)
+            (dt_proj): Linear(in_features=24, out_features=768, bias=True)
+            (conv1d_b): Conv1d(768, 768, kernel_size=(4,), stride=(1,), padding=(3,), groups=768)
+            (x_proj_b): Linear(in_features=768, out_features=56, bias=False)
+            (dt_proj_b): Linear(in_features=24, out_features=768, bias=True)
+            (out_proj): Linear(in_features=768, out_features=384, bias=False)
+          )
+          (norm): RMSNorm()
+          (drop_path): DropPath(drop_prob=0.020)
+        )
+        (1): MambaBlock(
+          (mixer): Mamba(
+            (in_proj): Linear(in_features=384, out_features=1536, bias=False)
+            (conv1d): Conv1d(768, 768, kernel_size=(4,), stride=(1,), padding=(3,), groups=768)
+            (act): SiLU()
+            (x_proj): Linear(in_features=768, out_features=56, bias=False)
+            (dt_proj): Linear(in_features=24, out_features=768, bias=True)
+            (conv1d_b): Conv1d(768, 768, kernel_size=(4,), stride=(1,), padding=(3,), groups=768)
+            (x_proj_b): Linear(in_features=768, out_features=56, bias=False)
+            (dt_proj_b): Linear(in_features=24, out_features=768, bias=True)
+            (out_proj): Linear(in_features=768, out_features=384, bias=False)
+          )
+          (norm): RMSNorm()
+          (drop_path): DropPath(drop_prob=0.040)
+        )
+      )
+      (3): Sequential(
+        (0): MambaBlock(
+          (mixer): Mamba(
+            (in_proj): Linear(in_features=384, out_features=1536, bias=False)
+            (conv1d): Conv1d(768, 768, kernel_size=(4,), stride=(1,), padding=(3,), groups=768)
+            (act): SiLU()
+            (x_proj): Linear(in_features=768, out_features=56, bias=False)
+            (dt_proj): Linear(in_features=24, out_features=768, bias=True)
+            (conv1d_b): Conv1d(768, 768, kernel_size=(4,), stride=(1,), padding=(3,), groups=768)
+            (x_proj_b): Linear(in_features=768, out_features=56, bias=False)
+            (dt_proj_b): Linear(in_features=24, out_features=768, bias=True)
+            (out_proj): Linear(in_features=768, out_features=384, bias=False)
+          )
+          (norm): RMSNorm()
+          (drop_path): DropPath(drop_prob=0.060)
+        )
+        (1): MambaBlock(
+          (mixer): Mamba(
+            (in_proj): Linear(in_features=384, out_features=1536, bias=False)
+            (conv1d): Conv1d(768, 768, kernel_size=(4,), stride=(1,), padding=(3,), groups=768)
+            (act): SiLU()
+            (x_proj): Linear(in_features=768, out_features=56, bias=False)
+            (dt_proj): Linear(in_features=24, out_features=768, bias=True)
+            (conv1d_b): Conv1d(768, 768, kernel_size=(4,), stride=(1,), padding=(3,), groups=768)
+            (x_proj_b): Linear(in_features=768, out_features=56, bias=False)
+            (dt_proj_b): Linear(in_features=24, out_features=768, bias=True)
+            (out_proj): Linear(in_features=768, out_features=384, bias=False)
+          )
+          (norm): RMSNorm()
+          (drop_path): DropPath(drop_prob=0.080)
+        )
+      )
+    )
+    (pos_blocks_list): ModuleList(
+      (0-3): 4 x Identity()
+    )
+    (residual_proj_blocks_list): ModuleList(
+      (0-1): 2 x Identity()
+      (2): Linear(in_features=192, out_features=384, bias=False)
+      (3): Identity()
+    )
+    (order_prompt_proj): ModuleList(
+      (0-1): 2 x Linear(in_features=384, out_features=192, bias=False)
+      (2-3): 2 x Linear(in_features=384, out_features=384, bias=False)
+    )
+    (act): ReLU(inplace=True)
+  )
+  (decoder): PointMambaPartDecoder(
+    (decode_list): ModuleList(
+      (0): PointNetFeaturePropagation(
+        (fuse): ConvBNReLU1D(
+          (act): ReLU(inplace=True)
+          (net): Sequential(
+            (0): Conv1d(768, 384, kernel_size=(1,), stride=(1,))
+            (1): BatchNorm1d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU(inplace=True)
+          )
+        )
+        (extraction): PosExtraction(
+          (operation): Sequential(
+            (0): ConvBNReLURes1D(
+              (act): ReLU(inplace=True)
+              (net1): Sequential(
+                (0): Conv1d(384, 384, kernel_size=(1,), stride=(1,))
+                (1): BatchNorm1d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+                (2): ReLU(inplace=True)
+              )
+              (net2): Sequential(
+                (0): Conv1d(384, 384, kernel_size=(1,), stride=(1,))
+                (1): BatchNorm1d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              )
+            )
+          )
+        )
+      )
+      (1): PointNetFeaturePropagation(
+        (fuse): ConvBNReLU1D(
+          (act): ReLU(inplace=True)
+          (net): Sequential(
+            (0): Conv1d(576, 192, kernel_size=(1,), stride=(1,))
+            (1): BatchNorm1d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU(inplace=True)
+          )
+        )
+        (extraction): PosExtraction(
+          (operation): Sequential(
+            (0): ConvBNReLURes1D(
+              (act): ReLU(inplace=True)
+              (net1): Sequential(
+                (0): Conv1d(192, 192, kernel_size=(1,), stride=(1,))
+                (1): BatchNorm1d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+                (2): ReLU(inplace=True)
+              )
+              (net2): Sequential(
+                (0): Conv1d(192, 192, kernel_size=(1,), stride=(1,))
+                (1): BatchNorm1d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              )
+            )
+          )
+        )
+      )
+      (2-3): 2 x PointNetFeaturePropagation(
+        (fuse): ConvBNReLU1D(
+          (act): ReLU(inplace=True)
+          (net): Sequential(
+            (0): Conv1d(384, 192, kernel_size=(1,), stride=(1,))
+            (1): BatchNorm1d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU(inplace=True)
+          )
+        )
+        (extraction): PosExtraction(
+          (operation): Sequential(
+            (0): ConvBNReLURes1D(
+              (act): ReLU(inplace=True)
+              (net1): Sequential(
+                (0): Conv1d(192, 192, kernel_size=(1,), stride=(1,))
+                (1): BatchNorm1d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+                (2): ReLU(inplace=True)
+              )
+              (net2): Sequential(
+                (0): Conv1d(192, 192, kernel_size=(1,), stride=(1,))
+                (1): BatchNorm1d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              )
+            )
+          )
+        )
+      )
+    )
+    (mamba_list): ModuleList(
+      (0-3): 4 x Sequential()
+    )
+    (act): ReLU(inplace=True)
+    (cls_map): Sequential(
+      (0): ConvBNReLU1D(
+        (act): ReLU(inplace=True)
+        (net): Sequential(
+          (0): Conv1d(16, 64, kernel_size=(1,), stride=(1,), bias=False)
+          (1): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (2): ReLU(inplace=True)
+        )
+      )
+      (1): ConvBNReLU1D(
+        (act): ReLU(inplace=True)
+        (net): Sequential(
+          (0): Conv1d(64, 64, kernel_size=(1,), stride=(1,), bias=False)
+          (1): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (2): ReLU(inplace=True)
+        )
+      )
+    )
+    (gmp_map_list): ModuleList(
+      (0-1): 2 x ConvBNReLU1D(
+        (act): ReLU(inplace=True)
+        (net): Sequential(
+          (0): Conv1d(384, 64, kernel_size=(1,), stride=(1,), bias=False)
+          (1): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (2): ReLU(inplace=True)
+        )
+      )
+      (2-4): 3 x ConvBNReLU1D(
+        (act): ReLU(inplace=True)
+        (net): Sequential(
+          (0): Conv1d(192, 64, kernel_size=(1,), stride=(1,), bias=False)
+          (1): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (2): ReLU(inplace=True)
+        )
+      )
+    )
+    (gmp_map_end): ConvBNReLU1D(
+      (act): ReLU(inplace=True)
+      (net): Sequential(
+        (0): Conv1d(320, 64, kernel_size=(1,), stride=(1,), bias=False)
+        (1): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace=True)
+      )
+    )
+  )
+  (head): SegHead(
+    (head): Sequential(
+      (0): Sequential(
+        (0): Conv1d(960, 960, kernel_size=(1,), stride=(1,), bias=False)
+        (1): BatchNorm1d(960, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace=True)
+      )
+      (1): Dropout(p=0.5, inplace=False)
+      (2): Sequential(
+        (0): Conv1d(960, 18, kernel_size=(1,), stride=(1,))
+      )
+    )
+  )
+)
+[10/22 11:31:31] ShapeNetPartNormal INFO: Number of params: 8.7431 M
+[10/22 11:31:31] ShapeNetPartNormal INFO: Param groups = {
+  "decay": {
+    "weight_decay": 0.05,
+    "params": [
+      "encoder.embedding.net.0.weight",
+      "encoder.order_prompt.weight",
+      "encoder.pos_proj.0.weight",
+      "encoder.pos_proj.1.weight",
+      "encoder.pos_proj.2.weight",
+      "encoder.pos_proj.3.weight",
+      "encoder.local_grouper_list.0.affine_alpha",
+      "encoder.local_grouper_list.0.affine_beta",
+      "encoder.local_grouper_list.1.affine_alpha",
+      "encoder.local_grouper_list.1.affine_beta",
+      "encoder.local_grouper_list.2.affine_alpha",
+      "encoder.local_grouper_list.2.affine_beta",
+      "encoder.local_grouper_list.3.affine_alpha",
+      "encoder.local_grouper_list.3.affine_beta",
+      "encoder.pre_blocks_list.0.transfer.net.0.weight",
+      "encoder.pre_blocks_list.0.operation.0.net1.0.weight",
+      "encoder.pre_blocks_list.0.operation.0.net2.0.weight",
+      "encoder.pre_blocks_list.1.transfer.net.0.weight",
+      "encoder.pre_blocks_list.1.operation.0.net1.0.weight",
+      "encoder.pre_blocks_list.1.operation.0.net2.0.weight",
+      "encoder.pre_blocks_list.2.transfer.net.0.weight",
+      "encoder.pre_blocks_list.2.operation.0.net1.0.weight",
+      "encoder.pre_blocks_list.2.operation.0.net2.0.weight",
+      "encoder.pre_blocks_list.3.transfer.net.0.weight",
+      "encoder.pre_blocks_list.3.operation.0.net1.0.weight",
+      "encoder.pre_blocks_list.3.operation.0.net2.0.weight",
+      "encoder.mamba_blocks_list.0.0.mixer.A_log",
+      "encoder.mamba_blocks_list.0.0.mixer.A_b_log",
+      "encoder.mamba_blocks_list.0.0.mixer.in_proj.weight",
+      "encoder.mamba_blocks_list.0.0.mixer.conv1d.weight",
+      "encoder.mamba_blocks_list.0.0.mixer.x_proj.weight",
+      "encoder.mamba_blocks_list.0.0.mixer.dt_proj.weight",
+      "encoder.mamba_blocks_list.0.0.mixer.conv1d_b.weight",
+      "encoder.mamba_blocks_list.0.0.mixer.x_proj_b.weight",
+      "encoder.mamba_blocks_list.0.0.mixer.dt_proj_b.weight",
+      "encoder.mamba_blocks_list.0.0.mixer.out_proj.weight",
+      "encoder.mamba_blocks_list.1.0.mixer.A_log",
+      "encoder.mamba_blocks_list.1.0.mixer.A_b_log",
+      "encoder.mamba_blocks_list.1.0.mixer.in_proj.weight",
+      "encoder.mamba_blocks_list.1.0.mixer.conv1d.weight",
+      "encoder.mamba_blocks_list.1.0.mixer.x_proj.weight",
+      "encoder.mamba_blocks_list.1.0.mixer.dt_proj.weight",
+      "encoder.mamba_blocks_list.1.0.mixer.conv1d_b.weight",
+      "encoder.mamba_blocks_list.1.0.mixer.x_proj_b.weight",
+      "encoder.mamba_blocks_list.1.0.mixer.dt_proj_b.weight",
+      "encoder.mamba_blocks_list.1.0.mixer.out_proj.weight",
+      "encoder.mamba_blocks_list.2.0.mixer.A_log",
+      "encoder.mamba_blocks_list.2.0.mixer.A_b_log",
+      "encoder.mamba_blocks_list.2.0.mixer.in_proj.weight",
+      "encoder.mamba_blocks_list.2.0.mixer.conv1d.weight",
+      "encoder.mamba_blocks_list.2.0.mixer.x_proj.weight",
+      "encoder.mamba_blocks_list.2.0.mixer.dt_proj.weight",
+      "encoder.mamba_blocks_list.2.0.mixer.conv1d_b.weight",
+      "encoder.mamba_blocks_list.2.0.mixer.x_proj_b.weight",
+      "encoder.mamba_blocks_list.2.0.mixer.dt_proj_b.weight",
+      "encoder.mamba_blocks_list.2.0.mixer.out_proj.weight",
+      "encoder.mamba_blocks_list.2.1.mixer.A_log",
+      "encoder.mamba_blocks_list.2.1.mixer.A_b_log",
+      "encoder.mamba_blocks_list.2.1.mixer.in_proj.weight",
+      "encoder.mamba_blocks_list.2.1.mixer.conv1d.weight",
+      "encoder.mamba_blocks_list.2.1.mixer.x_proj.weight",
+      "encoder.mamba_blocks_list.2.1.mixer.dt_proj.weight",
+      "encoder.mamba_blocks_list.2.1.mixer.conv1d_b.weight",
+      "encoder.mamba_blocks_list.2.1.mixer.x_proj_b.weight",
+      "encoder.mamba_blocks_list.2.1.mixer.dt_proj_b.weight",
+      "encoder.mamba_blocks_list.2.1.mixer.out_proj.weight",
+      "encoder.mamba_blocks_list.3.0.mixer.A_log",
+      "encoder.mamba_blocks_list.3.0.mixer.A_b_log",
+      "encoder.mamba_blocks_list.3.0.mixer.in_proj.weight",
+      "encoder.mamba_blocks_list.3.0.mixer.conv1d.weight",
+      "encoder.mamba_blocks_list.3.0.mixer.x_proj.weight",
+      "encoder.mamba_blocks_list.3.0.mixer.dt_proj.weight",
+      "encoder.mamba_blocks_list.3.0.mixer.conv1d_b.weight",
+      "encoder.mamba_blocks_list.3.0.mixer.x_proj_b.weight",
+      "encoder.mamba_blocks_list.3.0.mixer.dt_proj_b.weight",
+      "encoder.mamba_blocks_list.3.0.mixer.out_proj.weight",
+      "encoder.mamba_blocks_list.3.1.mixer.A_log",
+      "encoder.mamba_blocks_list.3.1.mixer.A_b_log",
+      "encoder.mamba_blocks_list.3.1.mixer.in_proj.weight",
+      "encoder.mamba_blocks_list.3.1.mixer.conv1d.weight",
+      "encoder.mamba_blocks_list.3.1.mixer.x_proj.weight",
+      "encoder.mamba_blocks_list.3.1.mixer.dt_proj.weight",
+      "encoder.mamba_blocks_list.3.1.mixer.conv1d_b.weight",
+      "encoder.mamba_blocks_list.3.1.mixer.x_proj_b.weight",
+      "encoder.mamba_blocks_list.3.1.mixer.dt_proj_b.weight",
+      "encoder.mamba_blocks_list.3.1.mixer.out_proj.weight",
+      "encoder.residual_proj_blocks_list.2.weight",
+      "encoder.order_prompt_proj.0.weight",
+      "encoder.order_prompt_proj.1.weight",
+      "encoder.order_prompt_proj.2.weight",
+      "encoder.order_prompt_proj.3.weight",
+      "decoder.decode_list.0.fuse.net.0.weight",
+      "decoder.decode_list.0.extraction.operation.0.net1.0.weight",
+      "decoder.decode_list.0.extraction.operation.0.net2.0.weight",
+      "decoder.decode_list.1.fuse.net.0.weight",
+      "decoder.decode_list.1.extraction.operation.0.net1.0.weight",
+      "decoder.decode_list.1.extraction.operation.0.net2.0.weight",
+      "decoder.decode_list.2.fuse.net.0.weight",
+      "decoder.decode_list.2.extraction.operation.0.net1.0.weight",
+      "decoder.decode_list.2.extraction.operation.0.net2.0.weight",
+      "decoder.decode_list.3.fuse.net.0.weight",
+      "decoder.decode_list.3.extraction.operation.0.net1.0.weight",
+      "decoder.decode_list.3.extraction.operation.0.net2.0.weight",
+      "decoder.cls_map.0.net.0.weight",
+      "decoder.cls_map.1.net.0.weight",
+      "decoder.gmp_map_list.0.net.0.weight",
+      "decoder.gmp_map_list.1.net.0.weight",
+      "decoder.gmp_map_list.2.net.0.weight",
+      "decoder.gmp_map_list.3.net.0.weight",
+      "decoder.gmp_map_list.4.net.0.weight",
+      "decoder.gmp_map_end.net.0.weight",
+      "head.head.0.0.weight",
+      "head.head.2.0.weight"
+    ],
+    "lr_scale": 1.0
+  },
+  "no_decay": {
+    "weight_decay": 0.0,
+    "params": [
+      "encoder.embedding.net.1.weight",
+      "encoder.embedding.net.1.bias",
+      "encoder.pre_blocks_list.0.transfer.net.1.weight",
+      "encoder.pre_blocks_list.0.transfer.net.1.bias",
+      "encoder.pre_blocks_list.0.operation.0.net1.1.weight",
+      "encoder.pre_blocks_list.0.operation.0.net1.1.bias",
+      "encoder.pre_blocks_list.0.operation.0.net2.1.weight",
+      "encoder.pre_blocks_list.0.operation.0.net2.1.bias",
+      "encoder.pre_blocks_list.1.transfer.net.1.weight",
+      "encoder.pre_blocks_list.1.transfer.net.1.bias",
+      "encoder.pre_blocks_list.1.operation.0.net1.1.weight",
+      "encoder.pre_blocks_list.1.operation.0.net1.1.bias",
+      "encoder.pre_blocks_list.1.operation.0.net2.1.weight",
+      "encoder.pre_blocks_list.1.operation.0.net2.1.bias",
+      "encoder.pre_blocks_list.2.transfer.net.1.weight",
+      "encoder.pre_blocks_list.2.transfer.net.1.bias",
+      "encoder.pre_blocks_list.2.operation.0.net1.1.weight",
+      "encoder.pre_blocks_list.2.operation.0.net1.1.bias",
+      "encoder.pre_blocks_list.2.operation.0.net2.1.weight",
+      "encoder.pre_blocks_list.2.operation.0.net2.1.bias",
+      "encoder.pre_blocks_list.3.transfer.net.1.weight",
+      "encoder.pre_blocks_list.3.transfer.net.1.bias",
+      "encoder.pre_blocks_list.3.operation.0.net1.1.weight",
+      "encoder.pre_blocks_list.3.operation.0.net1.1.bias",
+      "encoder.pre_blocks_list.3.operation.0.net2.1.weight",
+      "encoder.pre_blocks_list.3.operation.0.net2.1.bias",
+      "encoder.mamba_blocks_list.0.0.mixer.D",
+      "encoder.mamba_blocks_list.0.0.mixer.D_b",
+      "encoder.mamba_blocks_list.0.0.mixer.conv1d.bias",
+      "encoder.mamba_blocks_list.0.0.mixer.dt_proj.bias",
+      "encoder.mamba_blocks_list.0.0.mixer.conv1d_b.bias",
+      "encoder.mamba_blocks_list.0.0.mixer.dt_proj_b.bias",
+      "encoder.mamba_blocks_list.0.0.norm.weight",
+      "encoder.mamba_blocks_list.1.0.mixer.D",
+      "encoder.mamba_blocks_list.1.0.mixer.D_b",
+      "encoder.mamba_blocks_list.1.0.mixer.conv1d.bias",
+      "encoder.mamba_blocks_list.1.0.mixer.dt_proj.bias",
+      "encoder.mamba_blocks_list.1.0.mixer.conv1d_b.bias",
+      "encoder.mamba_blocks_list.1.0.mixer.dt_proj_b.bias",
+      "encoder.mamba_blocks_list.1.0.norm.weight",
+      "encoder.mamba_blocks_list.2.0.mixer.D",
+      "encoder.mamba_blocks_list.2.0.mixer.D_b",
+      "encoder.mamba_blocks_list.2.0.mixer.conv1d.bias",
+      "encoder.mamba_blocks_list.2.0.mixer.dt_proj.bias",
+      "encoder.mamba_blocks_list.2.0.mixer.conv1d_b.bias",
+      "encoder.mamba_blocks_list.2.0.mixer.dt_proj_b.bias",
+      "encoder.mamba_blocks_list.2.0.norm.weight",
+      "encoder.mamba_blocks_list.2.1.mixer.D",
+      "encoder.mamba_blocks_list.2.1.mixer.D_b",
+      "encoder.mamba_blocks_list.2.1.mixer.conv1d.bias",
+      "encoder.mamba_blocks_list.2.1.mixer.dt_proj.bias",
+      "encoder.mamba_blocks_list.2.1.mixer.conv1d_b.bias",
+      "encoder.mamba_blocks_list.2.1.mixer.dt_proj_b.bias",
+      "encoder.mamba_blocks_list.2.1.norm.weight",
+      "encoder.mamba_blocks_list.3.0.mixer.D",
+      "encoder.mamba_blocks_list.3.0.mixer.D_b",
+      "encoder.mamba_blocks_list.3.0.mixer.conv1d.bias",
+      "encoder.mamba_blocks_list.3.0.mixer.dt_proj.bias",
+      "encoder.mamba_blocks_list.3.0.mixer.conv1d_b.bias",
+      "encoder.mamba_blocks_list.3.0.mixer.dt_proj_b.bias",
+      "encoder.mamba_blocks_list.3.0.norm.weight",
+      "encoder.mamba_blocks_list.3.1.mixer.D",
+      "encoder.mamba_blocks_list.3.1.mixer.D_b",
+      "encoder.mamba_blocks_list.3.1.mixer.conv1d.bias",
+      "encoder.mamba_blocks_list.3.1.mixer.dt_proj.bias",
+      "encoder.mamba_blocks_list.3.1.mixer.conv1d_b.bias",
+      "encoder.mamba_blocks_list.3.1.mixer.dt_proj_b.bias",
+      "encoder.mamba_blocks_list.3.1.norm.weight",
+      "decoder.decode_list.0.fuse.net.0.bias",
+      "decoder.decode_list.0.fuse.net.1.weight",
+      "decoder.decode_list.0.fuse.net.1.bias",
+      "decoder.decode_list.0.extraction.operation.0.net1.0.bias",
+      "decoder.decode_list.0.extraction.operation.0.net1.1.weight",
+      "decoder.decode_list.0.extraction.operation.0.net1.1.bias",
+      "decoder.decode_list.0.extraction.operation.0.net2.0.bias",
+      "decoder.decode_list.0.extraction.operation.0.net2.1.weight",
+      "decoder.decode_list.0.extraction.operation.0.net2.1.bias",
+      "decoder.decode_list.1.fuse.net.0.bias",
+      "decoder.decode_list.1.fuse.net.1.weight",
+      "decoder.decode_list.1.fuse.net.1.bias",
+      "decoder.decode_list.1.extraction.operation.0.net1.0.bias",
+      "decoder.decode_list.1.extraction.operation.0.net1.1.weight",
+      "decoder.decode_list.1.extraction.operation.0.net1.1.bias",
+      "decoder.decode_list.1.extraction.operation.0.net2.0.bias",
+      "decoder.decode_list.1.extraction.operation.0.net2.1.weight",
+      "decoder.decode_list.1.extraction.operation.0.net2.1.bias",
+      "decoder.decode_list.2.fuse.net.0.bias",
+      "decoder.decode_list.2.fuse.net.1.weight",
+      "decoder.decode_list.2.fuse.net.1.bias",
+      "decoder.decode_list.2.extraction.operation.0.net1.0.bias",
+      "decoder.decode_list.2.extraction.operation.0.net1.1.weight",
+      "decoder.decode_list.2.extraction.operation.0.net1.1.bias",
+      "decoder.decode_list.2.extraction.operation.0.net2.0.bias",
+      "decoder.decode_list.2.extraction.operation.0.net2.1.weight",
+      "decoder.decode_list.2.extraction.operation.0.net2.1.bias",
+      "decoder.decode_list.3.fuse.net.0.bias",
+      "decoder.decode_list.3.fuse.net.1.weight",
+      "decoder.decode_list.3.fuse.net.1.bias",
+      "decoder.decode_list.3.extraction.operation.0.net1.0.bias",
+      "decoder.decode_list.3.extraction.operation.0.net1.1.weight",
+      "decoder.decode_list.3.extraction.operation.0.net1.1.bias",
+      "decoder.decode_list.3.extraction.operation.0.net2.0.bias",
+      "decoder.decode_list.3.extraction.operation.0.net2.1.weight",
+      "decoder.decode_list.3.extraction.operation.0.net2.1.bias",
+      "decoder.cls_map.0.net.1.weight",
+      "decoder.cls_map.0.net.1.bias",
+      "decoder.cls_map.1.net.1.weight",
+      "decoder.cls_map.1.net.1.bias",
+      "decoder.gmp_map_list.0.net.1.weight",
+      "decoder.gmp_map_list.0.net.1.bias",
+      "decoder.gmp_map_list.1.net.1.weight",
+      "decoder.gmp_map_list.1.net.1.bias",
+      "decoder.gmp_map_list.2.net.1.weight",
+      "decoder.gmp_map_list.2.net.1.bias",
+      "decoder.gmp_map_list.3.net.1.weight",
+      "decoder.gmp_map_list.3.net.1.bias",
+      "decoder.gmp_map_list.4.net.1.weight",
+      "decoder.gmp_map_list.4.net.1.bias",
+      "decoder.gmp_map_end.net.1.weight",
+      "decoder.gmp_map_end.net.1.bias",
+      "head.head.0.1.weight",
+      "head.head.0.1.bias",
+      "head.head.2.0.bias"
+    ],
+    "lr_scale": 1.0
+  }
+}
+[10/22 11:31:31] ShapeNetPartNormal INFO: Training from scratch
+[10/22 11:31:31] ShapeNetPartNormal INFO: length of training dataset: 176

@@ -1,0 +1,15 @@
+2025-01-16 14:31:36,644 - Model - INFO - PARAMETER ...
+2025-01-16 14:31:36,644 - Model - INFO - Namespace(model='pt', batch_size=1, epoch=300, warmup_epoch=10, learning_rate=0.0002, gpu='1', log_dir='./LVPC_compute', npoint=102400, normal=False, ckpts='../ckpt/pretrain.pth', root='../data/LVPC/')
+2025-01-16 14:31:36,658 - Model - INFO - The number of training data is: 176
+2025-01-16 14:31:36,659 - Model - INFO - The number of test data is: 45
+2025-01-16 14:31:40,406 - Model - INFO - Epoch 1 (1/300):
+2025-01-16 14:32:20,385 - Model - INFO - PARAMETER ...
+2025-01-16 14:32:20,385 - Model - INFO - Namespace(model='pt', batch_size=1, epoch=300, warmup_epoch=10, learning_rate=0.0002, gpu='1', log_dir='./LVPC_compute', npoint=102400, normal=False, ckpts='../ckpt/pretrain.pth', root='../data/LVPC/')
+2025-01-16 14:32:20,390 - Model - INFO - The number of training data is: 176
+2025-01-16 14:32:20,390 - Model - INFO - The number of test data is: 45
+2025-01-16 14:32:24,016 - Model - INFO - Epoch 1 (1/300):
+2025-01-16 14:33:03,848 - Model - INFO - PARAMETER ...
+2025-01-16 14:33:03,849 - Model - INFO - Namespace(model='pt', batch_size=1, epoch=300, warmup_epoch=10, learning_rate=0.0002, gpu='1', log_dir='./LVPC_compute', npoint=102400, normal=False, ckpts='../ckpt/pretrain.pth', root='../data/LVPC/')
+2025-01-16 14:33:03,855 - Model - INFO - The number of training data is: 176
+2025-01-16 14:33:03,855 - Model - INFO - The number of test data is: 45
+2025-01-16 14:33:07,606 - Model - INFO - Epoch 1 (1/300):

@@ -1,0 +1,24 @@
+2024-11-23 04:45:59,758 - Model - INFO - PARAMETER ...
+2024-11-23 04:45:59,758 - Model - INFO - Namespace(batch_size=4, gpu='3', log_dir='exp_v3', normal=False, num_point=102400, num_votes=3)
+2024-11-23 04:45:59,763 - Model - INFO - The number of test data is: 45
+2024-11-23 04:47:55,896 - Model - INFO - eval mIoU of Car            0.784291
+2024-11-23 04:47:55,896 - Model - INFO - Accuracy is: 0.92799
+2024-11-23 04:47:55,897 - Model - INFO - Class avg accuracy is: 0.84472
+2024-11-23 04:47:55,897 - Model - INFO - Class avg mIOU is: 0.78429
+2024-11-23 04:47:55,897 - Model - INFO - Inctance avg mIOU is: 0.78429
+2024-11-23 04:47:59,554 - Model - INFO - PARAMETER ...
+2024-11-23 04:47:59,554 - Model - INFO - Namespace(batch_size=4, gpu='3', log_dir='exp_v3', normal=False, num_point=102400, num_votes=3)
+2024-11-23 04:47:59,557 - Model - INFO - The number of test data is: 45
+2024-11-23 04:50:01,857 - Model - INFO - eval mIoU of Car            0.783695
+2024-11-23 04:50:01,858 - Model - INFO - Accuracy is: 0.92585
+2024-11-23 04:50:01,858 - Model - INFO - Class avg accuracy is: 0.84599
+2024-11-23 04:50:01,858 - Model - INFO - Class avg mIOU is: 0.78370
+2024-11-23 04:50:01,858 - Model - INFO - Inctance avg mIOU is: 0.78370
+2024-11-23 04:50:05,812 - Model - INFO - PARAMETER ...
+2024-11-23 04:50:05,813 - Model - INFO - Namespace(batch_size=4, gpu='3', log_dir='exp_v3', normal=False, num_point=102400, num_votes=3)
+2024-11-23 04:50:05,817 - Model - INFO - The number of test data is: 45
+2024-11-23 04:52:04,427 - Model - INFO - eval mIoU of Car            0.783724
+2024-11-23 04:52:04,428 - Model - INFO - Accuracy is: 0.92647
+2024-11-23 04:52:04,428 - Model - INFO - Class avg accuracy is: 0.84458
+2024-11-23 04:52:04,428 - Model - INFO - Class avg mIOU is: 0.78372
+2024-11-23 04:52:04,428 - Model - INFO - Inctance avg mIOU is: 0.78372

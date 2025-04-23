@@ -1,0 +1,995 @@
+[10/22 11:15:46] ShapeNetPartNormal INFO: dist_url: tcp://localhost:8888
+dist_backend: nccl
+multiprocessing_distributed: False
+ngpus_per_node: 1
+world_size: 1
+launcher: mp
+local_rank: 0
+use_gpu: True
+seed: 198
+epoch: 0
+epochs: 300
+ignore_index: None
+val_fn: validate
+deterministic: False
+sync_bn: False
+criterion_args:
+  NAME: Poly1FocalLoss
+use_mask: False
+grad_norm_clip: 1
+layer_decay: 0
+step_per_update: 1
+start_epoch: 1
+sched_on_epoch: True
+wandb:
+  use_wandb: False
+  project: PointNext-ShapeNetPart
+  tags: ['shapenetpart', 'train', 'pointmlp_finetune', 'ngpus1', 'seed198']
+  name: shapenetpart-train-pointmlp_finetune-ngpus1-seed198-20241022-111546-PjjRHBkrU66p2q2HqXW2qC
+use_amp: False
+use_voting: False
+val_freq: 1
+resume: False
+test: False
+finetune: False
+mode: train
+logname: None
+load_path: None
+print_freq: 10
+save_freq: -1
+root_dir: log/shapenetpart
+pretrained_path: None
+datatransforms:
+  train: ['PointsToTensor', 'PointCloudScaling', 'PointCloudCenterAndNormalize', 'PointCloudJitter', 'ChromaticDropGPU']
+  val: ['PointsToTensor', 'PointCloudCenterAndNormalize']
+  vote: ['PointCloudScaling']
+  kwargs:
+    jitter_sigma: 0.001
+    jitter_clip: 0.005
+    scale: [0.8, 1.2]
+    gravity_dim: 1
+    angle: [0, 1.0, 0]
+feature_keys: pos,x
+dataset:
+  common:
+    NAME: ShapeNetPartNormal
+    data_root: /config/workspace/wc/TAP/data/origin_segment_all_v3
+    use_normal: True
+    num_points: 102400
+  train:
+    split: trainval
+  val:
+    split: test
+    presample: True
+num_classes: 18
+shape_classes: 1
+num_points: 102400
+normal_channel: True
+batch_size: 1
+dataloader:
+  num_workers: 6
+num_votes: 10
+refine: True
+lr: 0.001
+min_lr: None
+optimizer:
+  NAME: adamw
+  weight_decay: 0.0001
+sched: multistep
+decay_epochs: [210, 270]
+decay_rate: 0.1
+warmup_epochs: 0
+model:
+  NAME: WholePartSeg
+  segmentor_args:
+    NAME: PointMLPPartSegmentor
+    pretrained_path: /config/workspace/wc/TAP/pointmlp_pretrain_shapenetpart.pth
+    num_classes: 18
+    points: 102400
+    embed_dim: 64
+    groups: 1
+    res_expansion: 1.0
+    activation: relu
+    bias: False
+    use_xyz: False
+    normalize: anchor
+    dim_expansion: [2, 2, 2, 2]
+    pre_blocks: [2, 2, 2, 2]
+    pos_blocks: [2, 2, 2, 2]
+    k_neighbors: [24, 24, 24, 24]
+    reducers: [2, 2, 2, 2]
+    de_dims: [512, 256, 128, 128]
+    de_blocks: [4, 4, 4, 4]
+    gmp_dim: 64
+    cls_dim: 64
+rank: 0
+distributed: False
+mp: False
+task_name: shapenetpart
+cfg_basename: pointmlp_finetune
+opts: 
+is_training: True
+run_name: shapenetpart-train-pointmlp_finetune-ngpus1-seed198-20241022-111546-PjjRHBkrU66p2q2HqXW2qC
+run_dir: log/shapenetpart/shapenetpart-train-pointmlp_finetune-ngpus1-seed198-20241022-111546-PjjRHBkrU66p2q2HqXW2qC
+exp_dir: log/shapenetpart/shapenetpart-train-pointmlp_finetune-ngpus1-seed198-20241022-111546-PjjRHBkrU66p2q2HqXW2qC
+log_dir: log/shapenetpart/shapenetpart-train-pointmlp_finetune-ngpus1-seed198-20241022-111546-PjjRHBkrU66p2q2HqXW2qC
+ckpt_dir: log/shapenetpart/shapenetpart-train-pointmlp_finetune-ngpus1-seed198-20241022-111546-PjjRHBkrU66p2q2HqXW2qC/checkpoint
+log_path: log/shapenetpart/shapenetpart-train-pointmlp_finetune-ngpus1-seed198-20241022-111546-PjjRHBkrU66p2q2HqXW2qC/shapenetpart-train-pointmlp_finetune-ngpus1-seed198-20241022-111546-PjjRHBkrU66p2q2HqXW2qC.log
+cfg_path: log/shapenetpart/shapenetpart-train-pointmlp_finetune-ngpus1-seed198-20241022-111546-PjjRHBkrU66p2q2HqXW2qC/cfg.yaml
+[10/22 11:15:46] ShapeNetPartNormal INFO: length of validation dataset: 45
+[10/22 11:15:46] ShapeNetPartNormal INFO: number of classes of the dataset: None
+[10/22 11:15:56] ShapeNetPartNormal INFO: WholePartSeg(
+  (segmentor): PointMLPPartSegmentor(
+    (embedding): ConvBNReLU1D(
+      (act): ReLU(inplace=True)
+      (net): Sequential(
+        (0): Conv1d(6, 64, kernel_size=(1,), stride=(1,), bias=False)
+        (1): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace=True)
+      )
+    )
+    (local_grouper_list): ModuleList(
+      (0): LocalGrouper()
+      (1): LocalGrouper()
+      (2): LocalGrouper()
+      (3): LocalGrouper()
+    )
+    (pre_blocks_list): ModuleList(
+      (0): PreExtraction(
+        (transfer): ConvBNReLU1D(
+          (act): ReLU(inplace=True)
+          (net): Sequential(
+            (0): Conv1d(128, 128, kernel_size=(1,), stride=(1,), bias=False)
+            (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU(inplace=True)
+          )
+        )
+        (operation): Sequential(
+          (0): ConvBNReLURes1D(
+            (act): ReLU(inplace=True)
+            (net1): Sequential(
+              (0): Conv1d(128, 128, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (net2): Sequential(
+              (0): Conv1d(128, 128, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            )
+          )
+          (1): ConvBNReLURes1D(
+            (act): ReLU(inplace=True)
+            (net1): Sequential(
+              (0): Conv1d(128, 128, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (net2): Sequential(
+              (0): Conv1d(128, 128, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            )
+          )
+        )
+      )
+      (1): PreExtraction(
+        (transfer): ConvBNReLU1D(
+          (act): ReLU(inplace=True)
+          (net): Sequential(
+            (0): Conv1d(256, 256, kernel_size=(1,), stride=(1,), bias=False)
+            (1): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU(inplace=True)
+          )
+        )
+        (operation): Sequential(
+          (0): ConvBNReLURes1D(
+            (act): ReLU(inplace=True)
+            (net1): Sequential(
+              (0): Conv1d(256, 256, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (net2): Sequential(
+              (0): Conv1d(256, 256, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            )
+          )
+          (1): ConvBNReLURes1D(
+            (act): ReLU(inplace=True)
+            (net1): Sequential(
+              (0): Conv1d(256, 256, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (net2): Sequential(
+              (0): Conv1d(256, 256, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            )
+          )
+        )
+      )
+      (2): PreExtraction(
+        (transfer): ConvBNReLU1D(
+          (act): ReLU(inplace=True)
+          (net): Sequential(
+            (0): Conv1d(512, 512, kernel_size=(1,), stride=(1,), bias=False)
+            (1): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU(inplace=True)
+          )
+        )
+        (operation): Sequential(
+          (0): ConvBNReLURes1D(
+            (act): ReLU(inplace=True)
+            (net1): Sequential(
+              (0): Conv1d(512, 512, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (net2): Sequential(
+              (0): Conv1d(512, 512, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            )
+          )
+          (1): ConvBNReLURes1D(
+            (act): ReLU(inplace=True)
+            (net1): Sequential(
+              (0): Conv1d(512, 512, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (net2): Sequential(
+              (0): Conv1d(512, 512, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            )
+          )
+        )
+      )
+      (3): PreExtraction(
+        (transfer): ConvBNReLU1D(
+          (act): ReLU(inplace=True)
+          (net): Sequential(
+            (0): Conv1d(1024, 1024, kernel_size=(1,), stride=(1,), bias=False)
+            (1): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU(inplace=True)
+          )
+        )
+        (operation): Sequential(
+          (0): ConvBNReLURes1D(
+            (act): ReLU(inplace=True)
+            (net1): Sequential(
+              (0): Conv1d(1024, 1024, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (net2): Sequential(
+              (0): Conv1d(1024, 1024, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            )
+          )
+          (1): ConvBNReLURes1D(
+            (act): ReLU(inplace=True)
+            (net1): Sequential(
+              (0): Conv1d(1024, 1024, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (net2): Sequential(
+              (0): Conv1d(1024, 1024, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            )
+          )
+        )
+      )
+    )
+    (pos_blocks_list): ModuleList(
+      (0): PosExtraction(
+        (operation): Sequential(
+          (0): ConvBNReLURes1D(
+            (act): ReLU(inplace=True)
+            (net1): Sequential(
+              (0): Conv1d(128, 128, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (net2): Sequential(
+              (0): Conv1d(128, 128, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            )
+          )
+          (1): ConvBNReLURes1D(
+            (act): ReLU(inplace=True)
+            (net1): Sequential(
+              (0): Conv1d(128, 128, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (net2): Sequential(
+              (0): Conv1d(128, 128, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            )
+          )
+        )
+      )
+      (1): PosExtraction(
+        (operation): Sequential(
+          (0): ConvBNReLURes1D(
+            (act): ReLU(inplace=True)
+            (net1): Sequential(
+              (0): Conv1d(256, 256, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (net2): Sequential(
+              (0): Conv1d(256, 256, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            )
+          )
+          (1): ConvBNReLURes1D(
+            (act): ReLU(inplace=True)
+            (net1): Sequential(
+              (0): Conv1d(256, 256, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (net2): Sequential(
+              (0): Conv1d(256, 256, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            )
+          )
+        )
+      )
+      (2): PosExtraction(
+        (operation): Sequential(
+          (0): ConvBNReLURes1D(
+            (act): ReLU(inplace=True)
+            (net1): Sequential(
+              (0): Conv1d(512, 512, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (net2): Sequential(
+              (0): Conv1d(512, 512, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            )
+          )
+          (1): ConvBNReLURes1D(
+            (act): ReLU(inplace=True)
+            (net1): Sequential(
+              (0): Conv1d(512, 512, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (net2): Sequential(
+              (0): Conv1d(512, 512, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            )
+          )
+        )
+      )
+      (3): PosExtraction(
+        (operation): Sequential(
+          (0): ConvBNReLURes1D(
+            (act): ReLU(inplace=True)
+            (net1): Sequential(
+              (0): Conv1d(1024, 1024, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (net2): Sequential(
+              (0): Conv1d(1024, 1024, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            )
+          )
+          (1): ConvBNReLURes1D(
+            (act): ReLU(inplace=True)
+            (net1): Sequential(
+              (0): Conv1d(1024, 1024, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (net2): Sequential(
+              (0): Conv1d(1024, 1024, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            )
+          )
+        )
+      )
+    )
+    (decode_list): ModuleList(
+      (0): PointNetFeaturePropagation(
+        (fuse): ConvBNReLU1D(
+          (act): ReLU(inplace=True)
+          (net): Sequential(
+            (0): Conv1d(1536, 512, kernel_size=(1,), stride=(1,), bias=False)
+            (1): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU(inplace=True)
+          )
+        )
+        (extraction): PosExtraction(
+          (operation): Sequential(
+            (0): ConvBNReLURes1D(
+              (act): ReLU(inplace=True)
+              (net1): Sequential(
+                (0): Conv1d(512, 512, kernel_size=(1,), stride=(1,), bias=False)
+                (1): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+                (2): ReLU(inplace=True)
+              )
+              (net2): Sequential(
+                (0): Conv1d(512, 512, kernel_size=(1,), stride=(1,), bias=False)
+                (1): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              )
+            )
+            (1): ConvBNReLURes1D(
+              (act): ReLU(inplace=True)
+              (net1): Sequential(
+                (0): Conv1d(512, 512, kernel_size=(1,), stride=(1,), bias=False)
+                (1): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+                (2): ReLU(inplace=True)
+              )
+              (net2): Sequential(
+                (0): Conv1d(512, 512, kernel_size=(1,), stride=(1,), bias=False)
+                (1): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              )
+            )
+            (2): ConvBNReLURes1D(
+              (act): ReLU(inplace=True)
+              (net1): Sequential(
+                (0): Conv1d(512, 512, kernel_size=(1,), stride=(1,), bias=False)
+                (1): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+                (2): ReLU(inplace=True)
+              )
+              (net2): Sequential(
+                (0): Conv1d(512, 512, kernel_size=(1,), stride=(1,), bias=False)
+                (1): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              )
+            )
+            (3): ConvBNReLURes1D(
+              (act): ReLU(inplace=True)
+              (net1): Sequential(
+                (0): Conv1d(512, 512, kernel_size=(1,), stride=(1,), bias=False)
+                (1): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+                (2): ReLU(inplace=True)
+              )
+              (net2): Sequential(
+                (0): Conv1d(512, 512, kernel_size=(1,), stride=(1,), bias=False)
+                (1): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              )
+            )
+          )
+        )
+      )
+      (1): PointNetFeaturePropagation(
+        (fuse): ConvBNReLU1D(
+          (act): ReLU(inplace=True)
+          (net): Sequential(
+            (0): Conv1d(768, 256, kernel_size=(1,), stride=(1,), bias=False)
+            (1): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU(inplace=True)
+          )
+        )
+        (extraction): PosExtraction(
+          (operation): Sequential(
+            (0): ConvBNReLURes1D(
+              (act): ReLU(inplace=True)
+              (net1): Sequential(
+                (0): Conv1d(256, 256, kernel_size=(1,), stride=(1,), bias=False)
+                (1): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+                (2): ReLU(inplace=True)
+              )
+              (net2): Sequential(
+                (0): Conv1d(256, 256, kernel_size=(1,), stride=(1,), bias=False)
+                (1): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              )
+            )
+            (1): ConvBNReLURes1D(
+              (act): ReLU(inplace=True)
+              (net1): Sequential(
+                (0): Conv1d(256, 256, kernel_size=(1,), stride=(1,), bias=False)
+                (1): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+                (2): ReLU(inplace=True)
+              )
+              (net2): Sequential(
+                (0): Conv1d(256, 256, kernel_size=(1,), stride=(1,), bias=False)
+                (1): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              )
+            )
+            (2): ConvBNReLURes1D(
+              (act): ReLU(inplace=True)
+              (net1): Sequential(
+                (0): Conv1d(256, 256, kernel_size=(1,), stride=(1,), bias=False)
+                (1): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+                (2): ReLU(inplace=True)
+              )
+              (net2): Sequential(
+                (0): Conv1d(256, 256, kernel_size=(1,), stride=(1,), bias=False)
+                (1): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              )
+            )
+            (3): ConvBNReLURes1D(
+              (act): ReLU(inplace=True)
+              (net1): Sequential(
+                (0): Conv1d(256, 256, kernel_size=(1,), stride=(1,), bias=False)
+                (1): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+                (2): ReLU(inplace=True)
+              )
+              (net2): Sequential(
+                (0): Conv1d(256, 256, kernel_size=(1,), stride=(1,), bias=False)
+                (1): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              )
+            )
+          )
+        )
+      )
+      (2): PointNetFeaturePropagation(
+        (fuse): ConvBNReLU1D(
+          (act): ReLU(inplace=True)
+          (net): Sequential(
+            (0): Conv1d(384, 128, kernel_size=(1,), stride=(1,), bias=False)
+            (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU(inplace=True)
+          )
+        )
+        (extraction): PosExtraction(
+          (operation): Sequential(
+            (0): ConvBNReLURes1D(
+              (act): ReLU(inplace=True)
+              (net1): Sequential(
+                (0): Conv1d(128, 128, kernel_size=(1,), stride=(1,), bias=False)
+                (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+                (2): ReLU(inplace=True)
+              )
+              (net2): Sequential(
+                (0): Conv1d(128, 128, kernel_size=(1,), stride=(1,), bias=False)
+                (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              )
+            )
+            (1): ConvBNReLURes1D(
+              (act): ReLU(inplace=True)
+              (net1): Sequential(
+                (0): Conv1d(128, 128, kernel_size=(1,), stride=(1,), bias=False)
+                (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+                (2): ReLU(inplace=True)
+              )
+              (net2): Sequential(
+                (0): Conv1d(128, 128, kernel_size=(1,), stride=(1,), bias=False)
+                (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              )
+            )
+            (2): ConvBNReLURes1D(
+              (act): ReLU(inplace=True)
+              (net1): Sequential(
+                (0): Conv1d(128, 128, kernel_size=(1,), stride=(1,), bias=False)
+                (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+                (2): ReLU(inplace=True)
+              )
+              (net2): Sequential(
+                (0): Conv1d(128, 128, kernel_size=(1,), stride=(1,), bias=False)
+                (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              )
+            )
+            (3): ConvBNReLURes1D(
+              (act): ReLU(inplace=True)
+              (net1): Sequential(
+                (0): Conv1d(128, 128, kernel_size=(1,), stride=(1,), bias=False)
+                (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+                (2): ReLU(inplace=True)
+              )
+              (net2): Sequential(
+                (0): Conv1d(128, 128, kernel_size=(1,), stride=(1,), bias=False)
+                (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              )
+            )
+          )
+        )
+      )
+      (3): PointNetFeaturePropagation(
+        (fuse): ConvBNReLU1D(
+          (act): ReLU(inplace=True)
+          (net): Sequential(
+            (0): Conv1d(192, 128, kernel_size=(1,), stride=(1,), bias=False)
+            (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            (2): ReLU(inplace=True)
+          )
+        )
+        (extraction): PosExtraction(
+          (operation): Sequential(
+            (0): ConvBNReLURes1D(
+              (act): ReLU(inplace=True)
+              (net1): Sequential(
+                (0): Conv1d(128, 128, kernel_size=(1,), stride=(1,), bias=False)
+                (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+                (2): ReLU(inplace=True)
+              )
+              (net2): Sequential(
+                (0): Conv1d(128, 128, kernel_size=(1,), stride=(1,), bias=False)
+                (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              )
+            )
+            (1): ConvBNReLURes1D(
+              (act): ReLU(inplace=True)
+              (net1): Sequential(
+                (0): Conv1d(128, 128, kernel_size=(1,), stride=(1,), bias=False)
+                (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+                (2): ReLU(inplace=True)
+              )
+              (net2): Sequential(
+                (0): Conv1d(128, 128, kernel_size=(1,), stride=(1,), bias=False)
+                (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              )
+            )
+            (2): ConvBNReLURes1D(
+              (act): ReLU(inplace=True)
+              (net1): Sequential(
+                (0): Conv1d(128, 128, kernel_size=(1,), stride=(1,), bias=False)
+                (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+                (2): ReLU(inplace=True)
+              )
+              (net2): Sequential(
+                (0): Conv1d(128, 128, kernel_size=(1,), stride=(1,), bias=False)
+                (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              )
+            )
+            (3): ConvBNReLURes1D(
+              (act): ReLU(inplace=True)
+              (net1): Sequential(
+                (0): Conv1d(128, 128, kernel_size=(1,), stride=(1,), bias=False)
+                (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+                (2): ReLU(inplace=True)
+              )
+              (net2): Sequential(
+                (0): Conv1d(128, 128, kernel_size=(1,), stride=(1,), bias=False)
+                (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              )
+            )
+          )
+        )
+      )
+    )
+    (act): ReLU(inplace=True)
+    (cls_map): Sequential(
+      (0): ConvBNReLU1D(
+        (act): ReLU(inplace=True)
+        (net): Sequential(
+          (0): Conv1d(16, 64, kernel_size=(1,), stride=(1,), bias=False)
+          (1): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (2): ReLU(inplace=True)
+        )
+      )
+      (1): ConvBNReLU1D(
+        (act): ReLU(inplace=True)
+        (net): Sequential(
+          (0): Conv1d(64, 64, kernel_size=(1,), stride=(1,), bias=False)
+          (1): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (2): ReLU(inplace=True)
+        )
+      )
+    )
+    (gmp_map_list): ModuleList(
+      (0): ConvBNReLU1D(
+        (act): ReLU(inplace=True)
+        (net): Sequential(
+          (0): Conv1d(1024, 64, kernel_size=(1,), stride=(1,), bias=False)
+          (1): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (2): ReLU(inplace=True)
+        )
+      )
+      (1): ConvBNReLU1D(
+        (act): ReLU(inplace=True)
+        (net): Sequential(
+          (0): Conv1d(512, 64, kernel_size=(1,), stride=(1,), bias=False)
+          (1): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (2): ReLU(inplace=True)
+        )
+      )
+      (2): ConvBNReLU1D(
+        (act): ReLU(inplace=True)
+        (net): Sequential(
+          (0): Conv1d(256, 64, kernel_size=(1,), stride=(1,), bias=False)
+          (1): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (2): ReLU(inplace=True)
+        )
+      )
+      (3): ConvBNReLU1D(
+        (act): ReLU(inplace=True)
+        (net): Sequential(
+          (0): Conv1d(128, 64, kernel_size=(1,), stride=(1,), bias=False)
+          (1): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (2): ReLU(inplace=True)
+        )
+      )
+      (4): ConvBNReLU1D(
+        (act): ReLU(inplace=True)
+        (net): Sequential(
+          (0): Conv1d(64, 64, kernel_size=(1,), stride=(1,), bias=False)
+          (1): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          (2): ReLU(inplace=True)
+        )
+      )
+    )
+    (gmp_map_end): ConvBNReLU1D(
+      (act): ReLU(inplace=True)
+      (net): Sequential(
+        (0): Conv1d(320, 64, kernel_size=(1,), stride=(1,), bias=False)
+        (1): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace=True)
+      )
+    )
+    (classifier): Sequential(
+      (0): Conv1d(256, 128, kernel_size=(1,), stride=(1,), bias=False)
+      (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+      (2): Dropout(p=0.5, inplace=False)
+      (3): Conv1d(128, 18, kernel_size=(1,), stride=(1,), bias=False)
+    )
+  )
+)
+[10/22 11:15:56] ShapeNetPartNormal INFO: Number of params: 16.7185 M
+[10/22 11:15:56] ShapeNetPartNormal INFO: Param groups = {
+  "decay": {
+    "weight_decay": 0.0001,
+    "params": [
+      "segmentor.embedding.net.0.weight",
+      "segmentor.local_grouper_list.0.affine_alpha",
+      "segmentor.local_grouper_list.0.affine_beta",
+      "segmentor.local_grouper_list.1.affine_alpha",
+      "segmentor.local_grouper_list.1.affine_beta",
+      "segmentor.local_grouper_list.2.affine_alpha",
+      "segmentor.local_grouper_list.2.affine_beta",
+      "segmentor.local_grouper_list.3.affine_alpha",
+      "segmentor.local_grouper_list.3.affine_beta",
+      "segmentor.pre_blocks_list.0.transfer.net.0.weight",
+      "segmentor.pre_blocks_list.0.operation.0.net1.0.weight",
+      "segmentor.pre_blocks_list.0.operation.0.net2.0.weight",
+      "segmentor.pre_blocks_list.0.operation.1.net1.0.weight",
+      "segmentor.pre_blocks_list.0.operation.1.net2.0.weight",
+      "segmentor.pre_blocks_list.1.transfer.net.0.weight",
+      "segmentor.pre_blocks_list.1.operation.0.net1.0.weight",
+      "segmentor.pre_blocks_list.1.operation.0.net2.0.weight",
+      "segmentor.pre_blocks_list.1.operation.1.net1.0.weight",
+      "segmentor.pre_blocks_list.1.operation.1.net2.0.weight",
+      "segmentor.pre_blocks_list.2.transfer.net.0.weight",
+      "segmentor.pre_blocks_list.2.operation.0.net1.0.weight",
+      "segmentor.pre_blocks_list.2.operation.0.net2.0.weight",
+      "segmentor.pre_blocks_list.2.operation.1.net1.0.weight",
+      "segmentor.pre_blocks_list.2.operation.1.net2.0.weight",
+      "segmentor.pre_blocks_list.3.transfer.net.0.weight",
+      "segmentor.pre_blocks_list.3.operation.0.net1.0.weight",
+      "segmentor.pre_blocks_list.3.operation.0.net2.0.weight",
+      "segmentor.pre_blocks_list.3.operation.1.net1.0.weight",
+      "segmentor.pre_blocks_list.3.operation.1.net2.0.weight",
+      "segmentor.pos_blocks_list.0.operation.0.net1.0.weight",
+      "segmentor.pos_blocks_list.0.operation.0.net2.0.weight",
+      "segmentor.pos_blocks_list.0.operation.1.net1.0.weight",
+      "segmentor.pos_blocks_list.0.operation.1.net2.0.weight",
+      "segmentor.pos_blocks_list.1.operation.0.net1.0.weight",
+      "segmentor.pos_blocks_list.1.operation.0.net2.0.weight",
+      "segmentor.pos_blocks_list.1.operation.1.net1.0.weight",
+      "segmentor.pos_blocks_list.1.operation.1.net2.0.weight",
+      "segmentor.pos_blocks_list.2.operation.0.net1.0.weight",
+      "segmentor.pos_blocks_list.2.operation.0.net2.0.weight",
+      "segmentor.pos_blocks_list.2.operation.1.net1.0.weight",
+      "segmentor.pos_blocks_list.2.operation.1.net2.0.weight",
+      "segmentor.pos_blocks_list.3.operation.0.net1.0.weight",
+      "segmentor.pos_blocks_list.3.operation.0.net2.0.weight",
+      "segmentor.pos_blocks_list.3.operation.1.net1.0.weight",
+      "segmentor.pos_blocks_list.3.operation.1.net2.0.weight",
+      "segmentor.decode_list.0.fuse.net.0.weight",
+      "segmentor.decode_list.0.extraction.operation.0.net1.0.weight",
+      "segmentor.decode_list.0.extraction.operation.0.net2.0.weight",
+      "segmentor.decode_list.0.extraction.operation.1.net1.0.weight",
+      "segmentor.decode_list.0.extraction.operation.1.net2.0.weight",
+      "segmentor.decode_list.0.extraction.operation.2.net1.0.weight",
+      "segmentor.decode_list.0.extraction.operation.2.net2.0.weight",
+      "segmentor.decode_list.0.extraction.operation.3.net1.0.weight",
+      "segmentor.decode_list.0.extraction.operation.3.net2.0.weight",
+      "segmentor.decode_list.1.fuse.net.0.weight",
+      "segmentor.decode_list.1.extraction.operation.0.net1.0.weight",
+      "segmentor.decode_list.1.extraction.operation.0.net2.0.weight",
+      "segmentor.decode_list.1.extraction.operation.1.net1.0.weight",
+      "segmentor.decode_list.1.extraction.operation.1.net2.0.weight",
+      "segmentor.decode_list.1.extraction.operation.2.net1.0.weight",
+      "segmentor.decode_list.1.extraction.operation.2.net2.0.weight",
+      "segmentor.decode_list.1.extraction.operation.3.net1.0.weight",
+      "segmentor.decode_list.1.extraction.operation.3.net2.0.weight",
+      "segmentor.decode_list.2.fuse.net.0.weight",
+      "segmentor.decode_list.2.extraction.operation.0.net1.0.weight",
+      "segmentor.decode_list.2.extraction.operation.0.net2.0.weight",
+      "segmentor.decode_list.2.extraction.operation.1.net1.0.weight",
+      "segmentor.decode_list.2.extraction.operation.1.net2.0.weight",
+      "segmentor.decode_list.2.extraction.operation.2.net1.0.weight",
+      "segmentor.decode_list.2.extraction.operation.2.net2.0.weight",
+      "segmentor.decode_list.2.extraction.operation.3.net1.0.weight",
+      "segmentor.decode_list.2.extraction.operation.3.net2.0.weight",
+      "segmentor.decode_list.3.fuse.net.0.weight",
+      "segmentor.decode_list.3.extraction.operation.0.net1.0.weight",
+      "segmentor.decode_list.3.extraction.operation.0.net2.0.weight",
+      "segmentor.decode_list.3.extraction.operation.1.net1.0.weight",
+      "segmentor.decode_list.3.extraction.operation.1.net2.0.weight",
+      "segmentor.decode_list.3.extraction.operation.2.net1.0.weight",
+      "segmentor.decode_list.3.extraction.operation.2.net2.0.weight",
+      "segmentor.decode_list.3.extraction.operation.3.net1.0.weight",
+      "segmentor.decode_list.3.extraction.operation.3.net2.0.weight",
+      "segmentor.cls_map.0.net.0.weight",
+      "segmentor.cls_map.1.net.0.weight",
+      "segmentor.gmp_map_list.0.net.0.weight",
+      "segmentor.gmp_map_list.1.net.0.weight",
+      "segmentor.gmp_map_list.2.net.0.weight",
+      "segmentor.gmp_map_list.3.net.0.weight",
+      "segmentor.gmp_map_list.4.net.0.weight",
+      "segmentor.gmp_map_end.net.0.weight",
+      "segmentor.classifier.0.weight",
+      "segmentor.classifier.3.weight"
+    ],
+    "lr_scale": 1.0
+  },
+  "no_decay": {
+    "weight_decay": 0.0,
+    "params": [
+      "segmentor.embedding.net.1.weight",
+      "segmentor.embedding.net.1.bias",
+      "segmentor.pre_blocks_list.0.transfer.net.1.weight",
+      "segmentor.pre_blocks_list.0.transfer.net.1.bias",
+      "segmentor.pre_blocks_list.0.operation.0.net1.1.weight",
+      "segmentor.pre_blocks_list.0.operation.0.net1.1.bias",
+      "segmentor.pre_blocks_list.0.operation.0.net2.1.weight",
+      "segmentor.pre_blocks_list.0.operation.0.net2.1.bias",
+      "segmentor.pre_blocks_list.0.operation.1.net1.1.weight",
+      "segmentor.pre_blocks_list.0.operation.1.net1.1.bias",
+      "segmentor.pre_blocks_list.0.operation.1.net2.1.weight",
+      "segmentor.pre_blocks_list.0.operation.1.net2.1.bias",
+      "segmentor.pre_blocks_list.1.transfer.net.1.weight",
+      "segmentor.pre_blocks_list.1.transfer.net.1.bias",
+      "segmentor.pre_blocks_list.1.operation.0.net1.1.weight",
+      "segmentor.pre_blocks_list.1.operation.0.net1.1.bias",
+      "segmentor.pre_blocks_list.1.operation.0.net2.1.weight",
+      "segmentor.pre_blocks_list.1.operation.0.net2.1.bias",
+      "segmentor.pre_blocks_list.1.operation.1.net1.1.weight",
+      "segmentor.pre_blocks_list.1.operation.1.net1.1.bias",
+      "segmentor.pre_blocks_list.1.operation.1.net2.1.weight",
+      "segmentor.pre_blocks_list.1.operation.1.net2.1.bias",
+      "segmentor.pre_blocks_list.2.transfer.net.1.weight",
+      "segmentor.pre_blocks_list.2.transfer.net.1.bias",
+      "segmentor.pre_blocks_list.2.operation.0.net1.1.weight",
+      "segmentor.pre_blocks_list.2.operation.0.net1.1.bias",
+      "segmentor.pre_blocks_list.2.operation.0.net2.1.weight",
+      "segmentor.pre_blocks_list.2.operation.0.net2.1.bias",
+      "segmentor.pre_blocks_list.2.operation.1.net1.1.weight",
+      "segmentor.pre_blocks_list.2.operation.1.net1.1.bias",
+      "segmentor.pre_blocks_list.2.operation.1.net2.1.weight",
+      "segmentor.pre_blocks_list.2.operation.1.net2.1.bias",
+      "segmentor.pre_blocks_list.3.transfer.net.1.weight",
+      "segmentor.pre_blocks_list.3.transfer.net.1.bias",
+      "segmentor.pre_blocks_list.3.operation.0.net1.1.weight",
+      "segmentor.pre_blocks_list.3.operation.0.net1.1.bias",
+      "segmentor.pre_blocks_list.3.operation.0.net2.1.weight",
+      "segmentor.pre_blocks_list.3.operation.0.net2.1.bias",
+      "segmentor.pre_blocks_list.3.operation.1.net1.1.weight",
+      "segmentor.pre_blocks_list.3.operation.1.net1.1.bias",
+      "segmentor.pre_blocks_list.3.operation.1.net2.1.weight",
+      "segmentor.pre_blocks_list.3.operation.1.net2.1.bias",
+      "segmentor.pos_blocks_list.0.operation.0.net1.1.weight",
+      "segmentor.pos_blocks_list.0.operation.0.net1.1.bias",
+      "segmentor.pos_blocks_list.0.operation.0.net2.1.weight",
+      "segmentor.pos_blocks_list.0.operation.0.net2.1.bias",
+      "segmentor.pos_blocks_list.0.operation.1.net1.1.weight",
+      "segmentor.pos_blocks_list.0.operation.1.net1.1.bias",
+      "segmentor.pos_blocks_list.0.operation.1.net2.1.weight",
+      "segmentor.pos_blocks_list.0.operation.1.net2.1.bias",
+      "segmentor.pos_blocks_list.1.operation.0.net1.1.weight",
+      "segmentor.pos_blocks_list.1.operation.0.net1.1.bias",
+      "segmentor.pos_blocks_list.1.operation.0.net2.1.weight",
+      "segmentor.pos_blocks_list.1.operation.0.net2.1.bias",
+      "segmentor.pos_blocks_list.1.operation.1.net1.1.weight",
+      "segmentor.pos_blocks_list.1.operation.1.net1.1.bias",
+      "segmentor.pos_blocks_list.1.operation.1.net2.1.weight",
+      "segmentor.pos_blocks_list.1.operation.1.net2.1.bias",
+      "segmentor.pos_blocks_list.2.operation.0.net1.1.weight",
+      "segmentor.pos_blocks_list.2.operation.0.net1.1.bias",
+      "segmentor.pos_blocks_list.2.operation.0.net2.1.weight",
+      "segmentor.pos_blocks_list.2.operation.0.net2.1.bias",
+      "segmentor.pos_blocks_list.2.operation.1.net1.1.weight",
+      "segmentor.pos_blocks_list.2.operation.1.net1.1.bias",
+      "segmentor.pos_blocks_list.2.operation.1.net2.1.weight",
+      "segmentor.pos_blocks_list.2.operation.1.net2.1.bias",
+      "segmentor.pos_blocks_list.3.operation.0.net1.1.weight",
+      "segmentor.pos_blocks_list.3.operation.0.net1.1.bias",
+      "segmentor.pos_blocks_list.3.operation.0.net2.1.weight",
+      "segmentor.pos_blocks_list.3.operation.0.net2.1.bias",
+      "segmentor.pos_blocks_list.3.operation.1.net1.1.weight",
+      "segmentor.pos_blocks_list.3.operation.1.net1.1.bias",
+      "segmentor.pos_blocks_list.3.operation.1.net2.1.weight",
+      "segmentor.pos_blocks_list.3.operation.1.net2.1.bias",
+      "segmentor.decode_list.0.fuse.net.1.weight",
+      "segmentor.decode_list.0.fuse.net.1.bias",
+      "segmentor.decode_list.0.extraction.operation.0.net1.1.weight",
+      "segmentor.decode_list.0.extraction.operation.0.net1.1.bias",
+      "segmentor.decode_list.0.extraction.operation.0.net2.1.weight",
+      "segmentor.decode_list.0.extraction.operation.0.net2.1.bias",
+      "segmentor.decode_list.0.extraction.operation.1.net1.1.weight",
+      "segmentor.decode_list.0.extraction.operation.1.net1.1.bias",
+      "segmentor.decode_list.0.extraction.operation.1.net2.1.weight",
+      "segmentor.decode_list.0.extraction.operation.1.net2.1.bias",
+      "segmentor.decode_list.0.extraction.operation.2.net1.1.weight",
+      "segmentor.decode_list.0.extraction.operation.2.net1.1.bias",
+      "segmentor.decode_list.0.extraction.operation.2.net2.1.weight",
+      "segmentor.decode_list.0.extraction.operation.2.net2.1.bias",
+      "segmentor.decode_list.0.extraction.operation.3.net1.1.weight",
+      "segmentor.decode_list.0.extraction.operation.3.net1.1.bias",
+      "segmentor.decode_list.0.extraction.operation.3.net2.1.weight",
+      "segmentor.decode_list.0.extraction.operation.3.net2.1.bias",
+      "segmentor.decode_list.1.fuse.net.1.weight",
+      "segmentor.decode_list.1.fuse.net.1.bias",
+      "segmentor.decode_list.1.extraction.operation.0.net1.1.weight",
+      "segmentor.decode_list.1.extraction.operation.0.net1.1.bias",
+      "segmentor.decode_list.1.extraction.operation.0.net2.1.weight",
+      "segmentor.decode_list.1.extraction.operation.0.net2.1.bias",
+      "segmentor.decode_list.1.extraction.operation.1.net1.1.weight",
+      "segmentor.decode_list.1.extraction.operation.1.net1.1.bias",
+      "segmentor.decode_list.1.extraction.operation.1.net2.1.weight",
+      "segmentor.decode_list.1.extraction.operation.1.net2.1.bias",
+      "segmentor.decode_list.1.extraction.operation.2.net1.1.weight",
+      "segmentor.decode_list.1.extraction.operation.2.net1.1.bias",
+      "segmentor.decode_list.1.extraction.operation.2.net2.1.weight",
+      "segmentor.decode_list.1.extraction.operation.2.net2.1.bias",
+      "segmentor.decode_list.1.extraction.operation.3.net1.1.weight",
+      "segmentor.decode_list.1.extraction.operation.3.net1.1.bias",
+      "segmentor.decode_list.1.extraction.operation.3.net2.1.weight",
+      "segmentor.decode_list.1.extraction.operation.3.net2.1.bias",
+      "segmentor.decode_list.2.fuse.net.1.weight",
+      "segmentor.decode_list.2.fuse.net.1.bias",
+      "segmentor.decode_list.2.extraction.operation.0.net1.1.weight",
+      "segmentor.decode_list.2.extraction.operation.0.net1.1.bias",
+      "segmentor.decode_list.2.extraction.operation.0.net2.1.weight",
+      "segmentor.decode_list.2.extraction.operation.0.net2.1.bias",
+      "segmentor.decode_list.2.extraction.operation.1.net1.1.weight",
+      "segmentor.decode_list.2.extraction.operation.1.net1.1.bias",
+      "segmentor.decode_list.2.extraction.operation.1.net2.1.weight",
+      "segmentor.decode_list.2.extraction.operation.1.net2.1.bias",
+      "segmentor.decode_list.2.extraction.operation.2.net1.1.weight",
+      "segmentor.decode_list.2.extraction.operation.2.net1.1.bias",
+      "segmentor.decode_list.2.extraction.operation.2.net2.1.weight",
+      "segmentor.decode_list.2.extraction.operation.2.net2.1.bias",
+      "segmentor.decode_list.2.extraction.operation.3.net1.1.weight",
+      "segmentor.decode_list.2.extraction.operation.3.net1.1.bias",
+      "segmentor.decode_list.2.extraction.operation.3.net2.1.weight",
+      "segmentor.decode_list.2.extraction.operation.3.net2.1.bias",
+      "segmentor.decode_list.3.fuse.net.1.weight",
+      "segmentor.decode_list.3.fuse.net.1.bias",
+      "segmentor.decode_list.3.extraction.operation.0.net1.1.weight",
+      "segmentor.decode_list.3.extraction.operation.0.net1.1.bias",
+      "segmentor.decode_list.3.extraction.operation.0.net2.1.weight",
+      "segmentor.decode_list.3.extraction.operation.0.net2.1.bias",
+      "segmentor.decode_list.3.extraction.operation.1.net1.1.weight",
+      "segmentor.decode_list.3.extraction.operation.1.net1.1.bias",
+      "segmentor.decode_list.3.extraction.operation.1.net2.1.weight",
+      "segmentor.decode_list.3.extraction.operation.1.net2.1.bias",
+      "segmentor.decode_list.3.extraction.operation.2.net1.1.weight",
+      "segmentor.decode_list.3.extraction.operation.2.net1.1.bias",
+      "segmentor.decode_list.3.extraction.operation.2.net2.1.weight",
+      "segmentor.decode_list.3.extraction.operation.2.net2.1.bias",
+      "segmentor.decode_list.3.extraction.operation.3.net1.1.weight",
+      "segmentor.decode_list.3.extraction.operation.3.net1.1.bias",
+      "segmentor.decode_list.3.extraction.operation.3.net2.1.weight",
+      "segmentor.decode_list.3.extraction.operation.3.net2.1.bias",
+      "segmentor.cls_map.0.net.1.weight",
+      "segmentor.cls_map.0.net.1.bias",
+      "segmentor.cls_map.1.net.1.weight",
+      "segmentor.cls_map.1.net.1.bias",
+      "segmentor.gmp_map_list.0.net.1.weight",
+      "segmentor.gmp_map_list.0.net.1.bias",
+      "segmentor.gmp_map_list.1.net.1.weight",
+      "segmentor.gmp_map_list.1.net.1.bias",
+      "segmentor.gmp_map_list.2.net.1.weight",
+      "segmentor.gmp_map_list.2.net.1.bias",
+      "segmentor.gmp_map_list.3.net.1.weight",
+      "segmentor.gmp_map_list.3.net.1.bias",
+      "segmentor.gmp_map_list.4.net.1.weight",
+      "segmentor.gmp_map_list.4.net.1.bias",
+      "segmentor.gmp_map_end.net.1.weight",
+      "segmentor.gmp_map_end.net.1.bias",
+      "segmentor.classifier.1.weight",
+      "segmentor.classifier.1.bias"
+    ],
+    "lr_scale": 1.0
+  }
+}
+[10/22 11:15:56] ShapeNetPartNormal INFO: Training from scratch
+[10/22 11:15:56] ShapeNetPartNormal INFO: length of training dataset: 176

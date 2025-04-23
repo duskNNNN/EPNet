@@ -1,0 +1,8 @@
+2025-01-16 15:04:17,543 - Model - INFO - PARAMETER ...
+2025-01-16 15:04:17,543 - Model - INFO - Namespace(batch_size=4, gpu='1', num_point=102400, log_dir='LVPC', normal=False, num_votes=3)
+2025-01-16 15:04:17,545 - Model - INFO - The number of test data is: 45
+2025-01-16 15:04:44,477 - Model - INFO - eval mIoU of Car            0.746214
+2025-01-16 15:04:44,477 - Model - INFO - Accuracy is: 0.90939
+2025-01-16 15:04:44,478 - Model - INFO - Class avg accuracy is: 0.82069
+2025-01-16 15:04:44,478 - Model - INFO - Class avg mIOU is: 0.74621
+2025-01-16 15:04:44,478 - Model - INFO - Inctance avg mIOU is: 0.74621

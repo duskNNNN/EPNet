@@ -1,0 +1,628 @@
+[10/22 10:22:51] ShapeNetPartNormal INFO: dist_url: tcp://localhost:8888
+dist_backend: nccl
+multiprocessing_distributed: False
+ngpus_per_node: 1
+world_size: 1
+launcher: mp
+local_rank: 0
+use_gpu: True
+seed: 1736
+epoch: 0
+epochs: 300
+ignore_index: None
+val_fn: validate
+deterministic: False
+sync_bn: False
+criterion_args:
+  NAME: Poly1FocalLoss
+use_mask: False
+grad_norm_clip: 1
+layer_decay: 0
+step_per_update: 1
+start_epoch: 1
+sched_on_epoch: True
+wandb:
+  use_wandb: False
+  project: PointNext-ShapeNetPart
+  tags: ['shapenetpart', 'train', 'spotr', 'ngpus1', 'seed1736']
+  name: shapenetpart-train-spotr-ngpus1-seed1736-20241022-102251-
+use_amp: False
+use_voting: False
+val_freq: 1
+resume: False
+test: False
+finetune: False
+mode: train
+logname: None
+load_path: None
+print_freq: 10
+save_freq: -1
+root_dir: log/shapenetpart
+pretrained_path: None
+datatransforms:
+  train: ['PointsToTensor', 'PointCloudScaling', 'PointCloudCenterAndNormalize', 'PointCloudJitter', 'ChromaticDropGPU']
+  val: ['PointsToTensor', 'PointCloudCenterAndNormalize']
+  vote: ['PointCloudScaling']
+  kwargs:
+    jitter_sigma: 0.001
+    jitter_clip: 0.005
+    scale: [0.8, 1.2]
+    gravity_dim: 1
+    angle: [0, 1.0, 0]
+feature_keys: pos,x,heights
+dataset:
+  common:
+    NAME: ShapeNetPartNormal
+    data_root: data/origin_segment_all_v3
+    use_normal: True
+    num_points: 102400
+  train:
+    split: trainval
+  val:
+    split: test
+    presample: True
+num_classes: 18
+shape_classes: 1
+num_points: 102400
+normal_channel: True
+batch_size: 1
+dataloader:
+  num_workers: 6
+num_votes: 10
+refine: True
+lr: 0.001
+min_lr: None
+optimizer:
+  NAME: adamw
+  weight_decay: 0.0001
+sched: multistep
+decay_epochs: [90, 120]
+decay_rate: 0.5
+warmup_epochs: 0
+model:
+  NAME: BasePartSeg
+  encoder_args:
+    NAME: SPoTrEncoder
+    blocks: [1, 1, 1, 1, 1]
+    strides: [1, 2, 2, 2, 2]
+    width: 128
+    in_channels: 7
+    num_layers: 3
+    expansion: 4
+    radius: 0.1
+    radius_scaling: 2.5
+    nsample: 32
+    gamma: 16
+    num_gp: 16
+    tau_delta: 0.1
+    aggr_args:
+      feature_type: dp_df
+    reduction: max
+    group_args:
+      NAME: ballquery
+      normalize_dp: True
+    conv_args:
+      order: conv-norm-act
+    act_args:
+      act: relu
+    norm_args:
+      norm: bn
+  decoder_args:
+    NAME: SPoTrPartDecoder
+  cls_args:
+    NAME: SegHead
+    globals: max,avg
+    num_classes: 18
+    in_channels: None
+    norm_args:
+      norm: bn
+rank: 0
+distributed: False
+mp: False
+task_name: shapenetpart
+cfg_basename: spotr
+is_training: True
+run_name: shapenetpart-train-spotr-ngpus1-seed1736-20241022-102251-
+run_dir: log/shapenetpart/shapenetpart-train-spotr-ngpus1-seed1736-20241022-102251-
+exp_dir: log/shapenetpart/shapenetpart-train-spotr-ngpus1-seed1736-20241022-102251-
+log_dir: log/shapenetpart/shapenetpart-train-spotr-ngpus1-seed1736-20241022-102251-
+ckpt_dir: log/shapenetpart/shapenetpart-train-spotr-ngpus1-seed1736-20241022-102251-/checkpoint
+log_path: log/shapenetpart/shapenetpart-train-spotr-ngpus1-seed1736-20241022-102251-/shapenetpart-train-spotr-ngpus1-seed1736-20241022-102251-.log
+cfg_path: log/shapenetpart/shapenetpart-train-spotr-ngpus1-seed1736-20241022-102251-/cfg.yaml
+[10/22 10:41:59] ShapeNetPartNormal INFO: split: test, median npoints 632677.0, avg num points 659449.2, std 171865.3
+[10/22 10:41:59] ShapeNetPartNormal INFO: length of validation dataset: 45
+[10/22 10:41:59] ShapeNetPartNormal INFO: number of classes of the dataset: None
+[10/22 10:41:59] ShapeNetPartNormal INFO: radius: [[0.1], [0.1], [0.25], [0.625], [1.5625]],
+ nsample: [[32], [32], [32], [32], [32]]
+[10/22 10:41:59] ShapeNetPartNormal INFO: NAME: ballquery
+normalize_dp: True
+radius: 0.1
+nsample: 32
+[10/22 10:41:59] ShapeNetPartNormal INFO: NAME: ballquery
+normalize_dp: True
+radius: 0.25
+nsample: 32
+[10/22 10:41:59] ShapeNetPartNormal INFO: NAME: ballquery
+normalize_dp: True
+radius: 0.625
+nsample: 32
+[10/22 10:41:59] ShapeNetPartNormal INFO: NAME: ballquery
+normalize_dp: True
+radius: 1.5625
+nsample: 32
+[10/22 10:41:59] ShapeNetPartNormal INFO: BasePartSeg(
+  (encoder): SPoTrEncoder(
+    (encoder): Sequential(
+      (0): Sequential(
+        (0): SPALPA(
+          (convs): Sequential(
+            (0): Sequential(
+              (0): Conv1d(7, 128, kernel_size=(1,), stride=(1,))
+            )
+          )
+          (attn_local): Sequential(
+            (0): Conv1d(7, 128, kernel_size=(1,), stride=(1,), bias=False)
+            (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          )
+        )
+      )
+      (1): Sequential(
+        (0): SPALPA(
+          (skipconv): Sequential(
+            (0): Conv1d(128, 256, kernel_size=(1,), stride=(1,))
+          )
+          (act): ReLU(inplace=True)
+          (convs): Sequential(
+            (0): Sequential(
+              (0): Conv2d(131, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (0): Conv2d(128, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (2): Sequential(
+              (0): Conv2d(128, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            )
+          )
+          (attn_local): Sequential(
+            (0): Conv2d(131, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          )
+          (gconvs): Sequential(
+            (0): Sequential(
+              (0): Conv2d(131, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (0): Conv2d(128, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (2): Sequential(
+              (0): Conv2d(128, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            )
+          )
+          (attn_global): Sequential(
+            (0): Conv2d(131, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          )
+          (grouper): QueryAndGroup()
+        )
+      )
+      (2): Sequential(
+        (0): SPALPA(
+          (skipconv): Sequential(
+            (0): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          )
+          (act): ReLU(inplace=True)
+          (convs): Sequential(
+            (0): Sequential(
+              (0): Conv2d(259, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (0): Conv2d(256, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (2): Sequential(
+              (0): Conv2d(256, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            )
+          )
+          (attn_local): Sequential(
+            (0): Conv2d(259, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          )
+          (gconvs): Sequential(
+            (0): Sequential(
+              (0): Conv2d(259, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (0): Conv2d(256, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (2): Sequential(
+              (0): Conv2d(256, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            )
+          )
+          (attn_global): Sequential(
+            (0): Conv2d(259, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          )
+          (grouper): QueryAndGroup()
+        )
+      )
+      (3): Sequential(
+        (0): SPALPA(
+          (skipconv): Sequential(
+            (0): Conv1d(512, 1024, kernel_size=(1,), stride=(1,))
+          )
+          (act): ReLU(inplace=True)
+          (convs): Sequential(
+            (0): Sequential(
+              (0): Conv2d(515, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (0): Conv2d(512, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (2): Sequential(
+              (0): Conv2d(512, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            )
+          )
+          (attn_local): Sequential(
+            (0): Conv2d(515, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (1): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          )
+          (gconvs): Sequential(
+            (0): Sequential(
+              (0): Conv2d(515, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (0): Conv2d(512, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (2): Sequential(
+              (0): Conv2d(512, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            )
+          )
+          (attn_global): Sequential(
+            (0): Conv2d(515, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (1): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          )
+          (grouper): QueryAndGroup()
+        )
+      )
+      (4): Sequential(
+        (0): SPALPA(
+          (skipconv): Sequential(
+            (0): Conv1d(1024, 2048, kernel_size=(1,), stride=(1,))
+          )
+          (act): ReLU(inplace=True)
+          (convs): Sequential(
+            (0): Sequential(
+              (0): Conv2d(1027, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (0): Conv2d(1024, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (2): Sequential(
+              (0): Conv2d(1024, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            )
+          )
+          (attn_local): Sequential(
+            (0): Conv2d(1027, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (1): BatchNorm2d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          )
+          (gconvs): Sequential(
+            (0): Sequential(
+              (0): Conv2d(1027, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (0): Conv2d(1024, 1024, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (2): Sequential(
+              (0): Conv2d(1024, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            )
+          )
+          (attn_global): Sequential(
+            (0): Conv2d(1027, 2048, kernel_size=(1, 1), stride=(1, 1), bias=False)
+            (1): BatchNorm2d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+          )
+          (grouper): QueryAndGroup()
+        )
+      )
+    )
+  )
+  (decoder): SPoTrPartDecoder(
+    (global_conv2): Sequential(
+      (0): Sequential(
+        (0): Conv1d(2048, 128, kernel_size=(1,), stride=(1,))
+        (1): ReLU(inplace=True)
+      )
+    )
+    (global_conv1): Sequential(
+      (0): Sequential(
+        (0): Conv1d(1024, 64, kernel_size=(1,), stride=(1,))
+        (1): ReLU(inplace=True)
+      )
+    )
+    (decoder): Sequential(
+      (0): Sequential(
+        (0): FeaturePropogation(
+          (convs): Sequential(
+            (0): Sequential(
+              (0): Conv1d(592, 128, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (0): Conv1d(128, 128, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+          )
+        )
+      )
+      (1): Sequential(
+        (0): FeaturePropogation(
+          (convs): Sequential(
+            (0): Sequential(
+              (0): Conv1d(768, 256, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (0): Conv1d(256, 256, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+          )
+        )
+      )
+      (2): Sequential(
+        (0): FeaturePropogation(
+          (convs): Sequential(
+            (0): Sequential(
+              (0): Conv1d(1536, 512, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (0): Conv1d(512, 512, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+          )
+        )
+      )
+      (3): Sequential(
+        (0): FeaturePropogation(
+          (convs): Sequential(
+            (0): Sequential(
+              (0): Conv1d(3072, 1024, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (0): Conv1d(1024, 1024, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(1024, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+          )
+        )
+      )
+    )
+  )
+  (head): SegHead(
+    (head): Sequential(
+      (0): Sequential(
+        (0): Conv1d(384, 384, kernel_size=(1,), stride=(1,), bias=False)
+        (1): BatchNorm1d(384, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace=True)
+      )
+      (1): Dropout(p=0.5, inplace=False)
+      (2): Sequential(
+        (0): Conv1d(384, 18, kernel_size=(1,), stride=(1,))
+      )
+    )
+  )
+)
+[10/22 10:41:59] ShapeNetPartNormal INFO: Number of params: 25.7022 M
+[10/22 10:41:59] ShapeNetPartNormal INFO: Param groups = {
+  "no_decay": {
+    "weight_decay": 0.0,
+    "params": [
+      "encoder.encoder.0.0.alpha",
+      "encoder.encoder.0.0.convs.0.0.bias",
+      "encoder.encoder.0.0.attn_local.1.weight",
+      "encoder.encoder.0.0.attn_local.1.bias",
+      "encoder.encoder.1.0.alpha",
+      "encoder.encoder.1.0.skipconv.0.bias",
+      "encoder.encoder.1.0.convs.0.1.weight",
+      "encoder.encoder.1.0.convs.0.1.bias",
+      "encoder.encoder.1.0.convs.1.1.weight",
+      "encoder.encoder.1.0.convs.1.1.bias",
+      "encoder.encoder.1.0.convs.2.1.weight",
+      "encoder.encoder.1.0.convs.2.1.bias",
+      "encoder.encoder.1.0.attn_local.1.weight",
+      "encoder.encoder.1.0.attn_local.1.bias",
+      "encoder.encoder.1.0.gconvs.0.1.weight",
+      "encoder.encoder.1.0.gconvs.0.1.bias",
+      "encoder.encoder.1.0.gconvs.1.1.weight",
+      "encoder.encoder.1.0.gconvs.1.1.bias",
+      "encoder.encoder.1.0.gconvs.2.1.weight",
+      "encoder.encoder.1.0.gconvs.2.1.bias",
+      "encoder.encoder.1.0.attn_global.1.weight",
+      "encoder.encoder.1.0.attn_global.1.bias",
+      "encoder.encoder.2.0.alpha",
+      "encoder.encoder.2.0.skipconv.0.bias",
+      "encoder.encoder.2.0.convs.0.1.weight",
+      "encoder.encoder.2.0.convs.0.1.bias",
+      "encoder.encoder.2.0.convs.1.1.weight",
+      "encoder.encoder.2.0.convs.1.1.bias",
+      "encoder.encoder.2.0.convs.2.1.weight",
+      "encoder.encoder.2.0.convs.2.1.bias",
+      "encoder.encoder.2.0.attn_local.1.weight",
+      "encoder.encoder.2.0.attn_local.1.bias",
+      "encoder.encoder.2.0.gconvs.0.1.weight",
+      "encoder.encoder.2.0.gconvs.0.1.bias",
+      "encoder.encoder.2.0.gconvs.1.1.weight",
+      "encoder.encoder.2.0.gconvs.1.1.bias",
+      "encoder.encoder.2.0.gconvs.2.1.weight",
+      "encoder.encoder.2.0.gconvs.2.1.bias",
+      "encoder.encoder.2.0.attn_global.1.weight",
+      "encoder.encoder.2.0.attn_global.1.bias",
+      "encoder.encoder.3.0.alpha",
+      "encoder.encoder.3.0.skipconv.0.bias",
+      "encoder.encoder.3.0.convs.0.1.weight",
+      "encoder.encoder.3.0.convs.0.1.bias",
+      "encoder.encoder.3.0.convs.1.1.weight",
+      "encoder.encoder.3.0.convs.1.1.bias",
+      "encoder.encoder.3.0.convs.2.1.weight",
+      "encoder.encoder.3.0.convs.2.1.bias",
+      "encoder.encoder.3.0.attn_local.1.weight",
+      "encoder.encoder.3.0.attn_local.1.bias",
+      "encoder.encoder.3.0.gconvs.0.1.weight",
+      "encoder.encoder.3.0.gconvs.0.1.bias",
+      "encoder.encoder.3.0.gconvs.1.1.weight",
+      "encoder.encoder.3.0.gconvs.1.1.bias",
+      "encoder.encoder.3.0.gconvs.2.1.weight",
+      "encoder.encoder.3.0.gconvs.2.1.bias",
+      "encoder.encoder.3.0.attn_global.1.weight",
+      "encoder.encoder.3.0.attn_global.1.bias",
+      "encoder.encoder.4.0.alpha",
+      "encoder.encoder.4.0.skipconv.0.bias",
+      "encoder.encoder.4.0.convs.0.1.weight",
+      "encoder.encoder.4.0.convs.0.1.bias",
+      "encoder.encoder.4.0.convs.1.1.weight",
+      "encoder.encoder.4.0.convs.1.1.bias",
+      "encoder.encoder.4.0.convs.2.1.weight",
+      "encoder.encoder.4.0.convs.2.1.bias",
+      "encoder.encoder.4.0.attn_local.1.weight",
+      "encoder.encoder.4.0.attn_local.1.bias",
+      "encoder.encoder.4.0.gconvs.0.1.weight",
+      "encoder.encoder.4.0.gconvs.0.1.bias",
+      "encoder.encoder.4.0.gconvs.1.1.weight",
+      "encoder.encoder.4.0.gconvs.1.1.bias",
+      "encoder.encoder.4.0.gconvs.2.1.weight",
+      "encoder.encoder.4.0.gconvs.2.1.bias",
+      "encoder.encoder.4.0.attn_global.1.weight",
+      "encoder.encoder.4.0.attn_global.1.bias",
+      "decoder.global_conv2.0.0.bias",
+      "decoder.global_conv1.0.0.bias",
+      "decoder.decoder.0.0.convs.0.1.weight",
+      "decoder.decoder.0.0.convs.0.1.bias",
+      "decoder.decoder.0.0.convs.1.1.weight",
+      "decoder.decoder.0.0.convs.1.1.bias",
+      "decoder.decoder.1.0.convs.0.1.weight",
+      "decoder.decoder.1.0.convs.0.1.bias",
+      "decoder.decoder.1.0.convs.1.1.weight",
+      "decoder.decoder.1.0.convs.1.1.bias",
+      "decoder.decoder.2.0.convs.0.1.weight",
+      "decoder.decoder.2.0.convs.0.1.bias",
+      "decoder.decoder.2.0.convs.1.1.weight",
+      "decoder.decoder.2.0.convs.1.1.bias",
+      "decoder.decoder.3.0.convs.0.1.weight",
+      "decoder.decoder.3.0.convs.0.1.bias",
+      "decoder.decoder.3.0.convs.1.1.weight",
+      "decoder.decoder.3.0.convs.1.1.bias",
+      "head.head.0.1.weight",
+      "head.head.0.1.bias",
+      "head.head.2.0.bias"
+    ],
+    "lr_scale": 1.0
+  },
+  "decay": {
+    "weight_decay": 0.0001,
+    "params": [
+      "encoder.encoder.0.0.convs.0.0.weight",
+      "encoder.encoder.0.0.attn_local.0.weight",
+      "encoder.encoder.1.0.z",
+      "encoder.encoder.1.0.skipconv.0.weight",
+      "encoder.encoder.1.0.convs.0.0.weight",
+      "encoder.encoder.1.0.convs.1.0.weight",
+      "encoder.encoder.1.0.convs.2.0.weight",
+      "encoder.encoder.1.0.attn_local.0.weight",
+      "encoder.encoder.1.0.gconvs.0.0.weight",
+      "encoder.encoder.1.0.gconvs.1.0.weight",
+      "encoder.encoder.1.0.gconvs.2.0.weight",
+      "encoder.encoder.1.0.attn_global.0.weight",
+      "encoder.encoder.2.0.z",
+      "encoder.encoder.2.0.skipconv.0.weight",
+      "encoder.encoder.2.0.convs.0.0.weight",
+      "encoder.encoder.2.0.convs.1.0.weight",
+      "encoder.encoder.2.0.convs.2.0.weight",
+      "encoder.encoder.2.0.attn_local.0.weight",
+      "encoder.encoder.2.0.gconvs.0.0.weight",
+      "encoder.encoder.2.0.gconvs.1.0.weight",
+      "encoder.encoder.2.0.gconvs.2.0.weight",
+      "encoder.encoder.2.0.attn_global.0.weight",
+      "encoder.encoder.3.0.z",
+      "encoder.encoder.3.0.skipconv.0.weight",
+      "encoder.encoder.3.0.convs.0.0.weight",
+      "encoder.encoder.3.0.convs.1.0.weight",
+      "encoder.encoder.3.0.convs.2.0.weight",
+      "encoder.encoder.3.0.attn_local.0.weight",
+      "encoder.encoder.3.0.gconvs.0.0.weight",
+      "encoder.encoder.3.0.gconvs.1.0.weight",
+      "encoder.encoder.3.0.gconvs.2.0.weight",
+      "encoder.encoder.3.0.attn_global.0.weight",
+      "encoder.encoder.4.0.z",
+      "encoder.encoder.4.0.skipconv.0.weight",
+      "encoder.encoder.4.0.convs.0.0.weight",
+      "encoder.encoder.4.0.convs.1.0.weight",
+      "encoder.encoder.4.0.convs.2.0.weight",
+      "encoder.encoder.4.0.attn_local.0.weight",
+      "encoder.encoder.4.0.gconvs.0.0.weight",
+      "encoder.encoder.4.0.gconvs.1.0.weight",
+      "encoder.encoder.4.0.gconvs.2.0.weight",
+      "encoder.encoder.4.0.attn_global.0.weight",
+      "decoder.global_conv2.0.0.weight",
+      "decoder.global_conv1.0.0.weight",
+      "decoder.decoder.0.0.convs.0.0.weight",
+      "decoder.decoder.0.0.convs.1.0.weight",
+      "decoder.decoder.1.0.convs.0.0.weight",
+      "decoder.decoder.1.0.convs.1.0.weight",
+      "decoder.decoder.2.0.convs.0.0.weight",
+      "decoder.decoder.2.0.convs.1.0.weight",
+      "decoder.decoder.3.0.convs.0.0.weight",
+      "decoder.decoder.3.0.convs.1.0.weight",
+      "head.head.0.0.weight",
+      "head.head.2.0.weight"
+    ],
+    "lr_scale": 1.0
+  }
+}
+[10/22 10:41:59] ShapeNetPartNormal INFO: Training from scratch
+[10/22 10:41:59] ShapeNetPartNormal INFO: length of training dataset: 176

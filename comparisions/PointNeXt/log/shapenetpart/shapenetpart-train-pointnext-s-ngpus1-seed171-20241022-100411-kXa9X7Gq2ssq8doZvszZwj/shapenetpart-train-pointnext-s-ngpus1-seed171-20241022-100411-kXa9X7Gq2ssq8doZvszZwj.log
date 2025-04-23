@@ -1,0 +1,1086 @@
+[10/22 10:04:11] ShapeNetPartNormal INFO: dist_url: tcp://localhost:8888
+dist_backend: nccl
+multiprocessing_distributed: False
+ngpus_per_node: 1
+world_size: 1
+launcher: mp
+local_rank: 0
+use_gpu: True
+seed: 171
+epoch: 0
+epochs: 300
+ignore_index: None
+val_fn: validate
+deterministic: False
+sync_bn: False
+criterion_args:
+  NAME: Poly1FocalLoss
+use_mask: False
+grad_norm_clip: 1
+layer_decay: 0
+step_per_update: 1
+start_epoch: 1
+sched_on_epoch: True
+wandb:
+  use_wandb: False
+  project: PointNext-ShapeNetPart
+  tags: ['shapenetpart', 'train', 'pointnext-s', 'ngpus1', 'seed171']
+  name: shapenetpart-train-pointnext-s-ngpus1-seed171-20241022-100411-kXa9X7Gq2ssq8doZvszZwj
+use_amp: False
+use_voting: False
+val_freq: 1
+resume: False
+test: False
+finetune: False
+mode: train
+logname: None
+load_path: None
+print_freq: 10
+save_freq: -1
+root_dir: log/shapenetpart
+pretrained_path: None
+datatransforms:
+  train: ['PointsToTensor', 'PointCloudScaling', 'PointCloudCenterAndNormalize', 'PointCloudJitter', 'ChromaticDropGPU']
+  val: ['PointsToTensor', 'PointCloudCenterAndNormalize']
+  vote: ['PointCloudScaling']
+  kwargs:
+    jitter_sigma: 0.001
+    jitter_clip: 0.005
+    scale: [0.8, 1.2]
+    gravity_dim: 1
+    angle: [0, 1.0, 0]
+feature_keys: pos,x,heights
+dataset:
+  common:
+    NAME: ShapeNetPartNormal
+    data_root: data/origin_segment_all_v3
+    use_normal: True
+    num_points: 102400
+  train:
+    split: trainval
+  val:
+    split: test
+    presample: True
+num_classes: 18
+shape_classes: 1
+num_points: 102400
+normal_channel: True
+batch_size: 4
+dataloader:
+  num_workers: 10
+num_votes: 10
+refine: True
+lr: 0.001
+min_lr: None
+optimizer:
+  NAME: adamw
+  weight_decay: 0.0001
+sched: multistep
+decay_epochs: [210, 270]
+decay_rate: 0.1
+warmup_epochs: 0
+model:
+  NAME: BasePartSeg
+  encoder_args:
+    NAME: PointNextEncoder
+    blocks: [1, 1, 1, 1, 1]
+    strides: [1, 2, 2, 2, 2]
+    width: 32
+    in_channels: 7
+    sa_layers: 3
+    sa_use_res: True
+    radius: 0.1
+    radius_scaling: 2.5
+    nsample: 32
+    expansion: 4
+    aggr_args:
+      feature_type: dp_fj
+    reduction: max
+    group_args:
+      NAME: ballquery
+      normalize_dp: True
+    conv_args:
+      order: conv-norm-act
+    act_args:
+      act: relu
+    norm_args:
+      norm: bn
+  decoder_args:
+    NAME: PointNextPartDecoder
+    cls_map: curvenet
+  cls_args:
+    NAME: SegHead
+    global_feat: max,avg
+    num_classes: 18
+    in_channels: None
+    norm_args:
+      norm: bn
+rank: 0
+distributed: False
+mp: False
+task_name: shapenetpart
+cfg_basename: pointnext-s
+opts: 
+is_training: True
+run_name: shapenetpart-train-pointnext-s-ngpus1-seed171-20241022-100411-kXa9X7Gq2ssq8doZvszZwj
+run_dir: log/shapenetpart/shapenetpart-train-pointnext-s-ngpus1-seed171-20241022-100411-kXa9X7Gq2ssq8doZvszZwj
+exp_dir: log/shapenetpart/shapenetpart-train-pointnext-s-ngpus1-seed171-20241022-100411-kXa9X7Gq2ssq8doZvszZwj
+log_dir: log/shapenetpart/shapenetpart-train-pointnext-s-ngpus1-seed171-20241022-100411-kXa9X7Gq2ssq8doZvszZwj
+ckpt_dir: log/shapenetpart/shapenetpart-train-pointnext-s-ngpus1-seed171-20241022-100411-kXa9X7Gq2ssq8doZvszZwj/checkpoint
+log_path: log/shapenetpart/shapenetpart-train-pointnext-s-ngpus1-seed171-20241022-100411-kXa9X7Gq2ssq8doZvszZwj/shapenetpart-train-pointnext-s-ngpus1-seed171-20241022-100411-kXa9X7Gq2ssq8doZvszZwj.log
+cfg_path: log/shapenetpart/shapenetpart-train-pointnext-s-ngpus1-seed171-20241022-100411-kXa9X7Gq2ssq8doZvszZwj/cfg.yaml
+[10/22 10:04:12] ShapeNetPartNormal INFO: length of validation dataset: 45
+[10/22 10:04:12] ShapeNetPartNormal INFO: number of classes of the dataset: None
+[10/22 10:04:12] ShapeNetPartNormal INFO: radius: [[0.1], [0.1], [0.25], [0.625], [1.5625]],
+ nsample: [[32], [32], [32], [32], [32]]
+[10/22 10:04:12] ShapeNetPartNormal INFO: NAME: ballquery
+normalize_dp: True
+radius: 0.1
+nsample: 32
+[10/22 10:04:12] ShapeNetPartNormal INFO: NAME: ballquery
+normalize_dp: True
+radius: 0.25
+nsample: 32
+[10/22 10:04:12] ShapeNetPartNormal INFO: NAME: ballquery
+normalize_dp: True
+radius: 0.625
+nsample: 32
+[10/22 10:04:12] ShapeNetPartNormal INFO: NAME: ballquery
+normalize_dp: True
+radius: 1.5625
+nsample: 32
+[10/22 10:04:20] ShapeNetPartNormal INFO: BasePartSeg(
+  (encoder): PointNextEncoder(
+    (encoder): Sequential(
+      (0): Sequential(
+        (0): SetAbstraction(
+          (convs): Sequential(
+            (0): Sequential(
+              (0): Conv1d(7, 32, kernel_size=(1,), stride=(1,))
+            )
+          )
+        )
+      )
+      (1): Sequential(
+        (0): SetAbstraction(
+          (skipconv): Sequential(
+            (0): Conv1d(32, 64, kernel_size=(1,), stride=(1,))
+          )
+          (act): ReLU(inplace=True)
+          (convs): Sequential(
+            (0): Sequential(
+              (0): Conv2d(35, 32, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (0): Conv2d(32, 32, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (2): Sequential(
+              (0): Conv2d(32, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            )
+          )
+          (grouper): QueryAndGroup()
+        )
+      )
+      (2): Sequential(
+        (0): SetAbstraction(
+          (skipconv): Sequential(
+            (0): Conv1d(64, 128, kernel_size=(1,), stride=(1,))
+          )
+          (act): ReLU(inplace=True)
+          (convs): Sequential(
+            (0): Sequential(
+              (0): Conv2d(67, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (2): Sequential(
+              (0): Conv2d(64, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            )
+          )
+          (grouper): QueryAndGroup()
+        )
+      )
+      (3): Sequential(
+        (0): SetAbstraction(
+          (skipconv): Sequential(
+            (0): Conv1d(128, 256, kernel_size=(1,), stride=(1,))
+          )
+          (act): ReLU(inplace=True)
+          (convs): Sequential(
+            (0): Sequential(
+              (0): Conv2d(131, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (0): Conv2d(128, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (2): Sequential(
+              (0): Conv2d(128, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            )
+          )
+          (grouper): QueryAndGroup()
+        )
+      )
+      (4): Sequential(
+        (0): SetAbstraction(
+          (skipconv): Sequential(
+            (0): Conv1d(256, 512, kernel_size=(1,), stride=(1,))
+          )
+          (act): ReLU(inplace=True)
+          (convs): Sequential(
+            (0): Sequential(
+              (0): Conv2d(259, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (0): Conv2d(256, 256, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (2): Sequential(
+              (0): Conv2d(256, 512, kernel_size=(1, 1), stride=(1, 1), bias=False)
+              (1): BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+            )
+          )
+          (grouper): QueryAndGroup()
+        )
+      )
+    )
+  )
+  (decoder): PointNextPartDecoder(
+    (global_conv2): Sequential(
+      (0): Sequential(
+        (0): Conv1d(512, 128, kernel_size=(1,), stride=(1,))
+        (1): ReLU(inplace=True)
+      )
+    )
+    (global_conv1): Sequential(
+      (0): Sequential(
+        (0): Conv1d(256, 64, kernel_size=(1,), stride=(1,))
+        (1): ReLU(inplace=True)
+      )
+    )
+    (decoder): Sequential(
+      (0): Sequential(
+        (0): FeaturePropogation(
+          (convs): Sequential(
+            (0): Sequential(
+              (0): Conv1d(304, 32, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (0): Conv1d(32, 32, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(32, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+          )
+        )
+      )
+      (1): Sequential(
+        (0): FeaturePropogation(
+          (convs): Sequential(
+            (0): Sequential(
+              (0): Conv1d(192, 64, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (0): Conv1d(64, 64, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+          )
+        )
+      )
+      (2): Sequential(
+        (0): FeaturePropogation(
+          (convs): Sequential(
+            (0): Sequential(
+              (0): Conv1d(384, 128, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (0): Conv1d(128, 128, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+          )
+        )
+      )
+      (3): Sequential(
+        (0): FeaturePropogation(
+          (convs): Sequential(
+            (0): Sequential(
+              (0): Conv1d(768, 256, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+            (1): Sequential(
+              (0): Conv1d(256, 256, kernel_size=(1,), stride=(1,), bias=False)
+              (1): BatchNorm1d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU(inplace=True)
+            )
+          )
+        )
+      )
+    )
+  )
+  (head): SegHead(
+    (head): Sequential(
+      (0): Sequential(
+        (0): Conv1d(96, 96, kernel_size=(1,), stride=(1,), bias=False)
+        (1): BatchNorm1d(96, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU(inplace=True)
+      )
+      (1): Dropout(p=0.5, inplace=False)
+      (2): Sequential(
+        (0): Conv1d(96, 18, kernel_size=(1,), stride=(1,))
+      )
+    )
+  )
+)
+[10/22 10:04:20] ShapeNetPartNormal INFO: Number of params: 0.9787 M
+[10/22 10:04:20] ShapeNetPartNormal INFO: Param groups = {
+  "decay": {
+    "weight_decay": 0.0001,
+    "params": [
+      "encoder.encoder.0.0.convs.0.0.weight",
+      "encoder.encoder.1.0.skipconv.0.weight",
+      "encoder.encoder.1.0.convs.0.0.weight",
+      "encoder.encoder.1.0.convs.1.0.weight",
+      "encoder.encoder.1.0.convs.2.0.weight",
+      "encoder.encoder.2.0.skipconv.0.weight",
+      "encoder.encoder.2.0.convs.0.0.weight",
+      "encoder.encoder.2.0.convs.1.0.weight",
+      "encoder.encoder.2.0.convs.2.0.weight",
+      "encoder.encoder.3.0.skipconv.0.weight",
+      "encoder.encoder.3.0.convs.0.0.weight",
+      "encoder.encoder.3.0.convs.1.0.weight",
+      "encoder.encoder.3.0.convs.2.0.weight",
+      "encoder.encoder.4.0.skipconv.0.weight",
+      "encoder.encoder.4.0.convs.0.0.weight",
+      "encoder.encoder.4.0.convs.1.0.weight",
+      "encoder.encoder.4.0.convs.2.0.weight",
+      "decoder.global_conv2.0.0.weight",
+      "decoder.global_conv1.0.0.weight",
+      "decoder.decoder.0.0.convs.0.0.weight",
+      "decoder.decoder.0.0.convs.1.0.weight",
+      "decoder.decoder.1.0.convs.0.0.weight",
+      "decoder.decoder.1.0.convs.1.0.weight",
+      "decoder.decoder.2.0.convs.0.0.weight",
+      "decoder.decoder.2.0.convs.1.0.weight",
+      "decoder.decoder.3.0.convs.0.0.weight",
+      "decoder.decoder.3.0.convs.1.0.weight",
+      "head.head.0.0.weight",
+      "head.head.2.0.weight"
+    ],
+    "lr_scale": 1.0
+  },
+  "no_decay": {
+    "weight_decay": 0.0,
+    "params": [
+      "encoder.encoder.0.0.convs.0.0.bias",
+      "encoder.encoder.1.0.skipconv.0.bias",
+      "encoder.encoder.1.0.convs.0.1.weight",
+      "encoder.encoder.1.0.convs.0.1.bias",
+      "encoder.encoder.1.0.convs.1.1.weight",
+      "encoder.encoder.1.0.convs.1.1.bias",
+      "encoder.encoder.1.0.convs.2.1.weight",
+      "encoder.encoder.1.0.convs.2.1.bias",
+      "encoder.encoder.2.0.skipconv.0.bias",
+      "encoder.encoder.2.0.convs.0.1.weight",
+      "encoder.encoder.2.0.convs.0.1.bias",
+      "encoder.encoder.2.0.convs.1.1.weight",
+      "encoder.encoder.2.0.convs.1.1.bias",
+      "encoder.encoder.2.0.convs.2.1.weight",
+      "encoder.encoder.2.0.convs.2.1.bias",
+      "encoder.encoder.3.0.skipconv.0.bias",
+      "encoder.encoder.3.0.convs.0.1.weight",
+      "encoder.encoder.3.0.convs.0.1.bias",
+      "encoder.encoder.3.0.convs.1.1.weight",
+      "encoder.encoder.3.0.convs.1.1.bias",
+      "encoder.encoder.3.0.convs.2.1.weight",
+      "encoder.encoder.3.0.convs.2.1.bias",
+      "encoder.encoder.4.0.skipconv.0.bias",
+      "encoder.encoder.4.0.convs.0.1.weight",
+      "encoder.encoder.4.0.convs.0.1.bias",
+      "encoder.encoder.4.0.convs.1.1.weight",
+      "encoder.encoder.4.0.convs.1.1.bias",
+      "encoder.encoder.4.0.convs.2.1.weight",
+      "encoder.encoder.4.0.convs.2.1.bias",
+      "decoder.global_conv2.0.0.bias",
+      "decoder.global_conv1.0.0.bias",
+      "decoder.decoder.0.0.convs.0.1.weight",
+      "decoder.decoder.0.0.convs.0.1.bias",
+      "decoder.decoder.0.0.convs.1.1.weight",
+      "decoder.decoder.0.0.convs.1.1.bias",
+      "decoder.decoder.1.0.convs.0.1.weight",
+      "decoder.decoder.1.0.convs.0.1.bias",
+      "decoder.decoder.1.0.convs.1.1.weight",
+      "decoder.decoder.1.0.convs.1.1.bias",
+      "decoder.decoder.2.0.convs.0.1.weight",
+      "decoder.decoder.2.0.convs.0.1.bias",
+      "decoder.decoder.2.0.convs.1.1.weight",
+      "decoder.decoder.2.0.convs.1.1.bias",
+      "decoder.decoder.3.0.convs.0.1.weight",
+      "decoder.decoder.3.0.convs.0.1.bias",
+      "decoder.decoder.3.0.convs.1.1.weight",
+      "decoder.decoder.3.0.convs.1.1.bias",
+      "head.head.0.1.weight",
+      "head.head.0.1.bias",
+      "head.head.2.0.bias"
+    ],
+    "lr_scale": 1.0
+  }
+}
+[10/22 10:04:20] ShapeNetPartNormal INFO: Training from scratch
+[10/22 10:04:20] ShapeNetPartNormal INFO: length of training dataset: 176
+[10/22 10:08:10] ShapeNetPartNormal INFO: Test Epoch [1/300],Instance mIoU 35.16, Class mIoU 35.16, 
+ Class mIoUs tensor([35.1602], device='cuda:0')
+[10/22 10:08:10] ShapeNetPartNormal INFO: Find a better ckpt @E1, val_ins_miou 35.16 val_cls_miou 35.16, 
+cls_mious: tensor([35.1602], device='cuda:0')
+[10/22 10:08:10] ShapeNetPartNormal INFO: Found the best model and saved in log/shapenetpart/shapenetpart-train-pointnext-s-ngpus1-seed171-20241022-100411-kXa9X7Gq2ssq8doZvszZwj/checkpoint/shapenetpart-train-pointnext-s-ngpus1-seed171-20241022-100411-kXa9X7Gq2ssq8doZvszZwj_ckpt_best.pth
+[10/22 10:11:59] ShapeNetPartNormal INFO: Test Epoch [2/300],Instance mIoU 35.88, Class mIoU 35.88, 
+ Class mIoUs tensor([35.8801], device='cuda:0')
+[10/22 10:11:59] ShapeNetPartNormal INFO: Find a better ckpt @E2, val_ins_miou 35.88 val_cls_miou 35.88, 
+cls_mious: tensor([35.8801], device='cuda:0')
+[10/22 10:11:59] ShapeNetPartNormal INFO: Found the best model and saved in log/shapenetpart/shapenetpart-train-pointnext-s-ngpus1-seed171-20241022-100411-kXa9X7Gq2ssq8doZvszZwj/checkpoint/shapenetpart-train-pointnext-s-ngpus1-seed171-20241022-100411-kXa9X7Gq2ssq8doZvszZwj_ckpt_best.pth
+[10/22 10:15:56] ShapeNetPartNormal INFO: Test Epoch [3/300],Instance mIoU 35.90, Class mIoU 35.90, 
+ Class mIoUs tensor([35.9010], device='cuda:0')
+[10/22 10:15:56] ShapeNetPartNormal INFO: Find a better ckpt @E3, val_ins_miou 35.90 val_cls_miou 35.90, 
+cls_mious: tensor([35.9010], device='cuda:0')
+[10/22 10:15:56] ShapeNetPartNormal INFO: Found the best model and saved in log/shapenetpart/shapenetpart-train-pointnext-s-ngpus1-seed171-20241022-100411-kXa9X7Gq2ssq8doZvszZwj/checkpoint/shapenetpart-train-pointnext-s-ngpus1-seed171-20241022-100411-kXa9X7Gq2ssq8doZvszZwj_ckpt_best.pth
+[10/22 10:20:04] ShapeNetPartNormal INFO: Test Epoch [4/300],Instance mIoU 36.35, Class mIoU 36.35, 
+ Class mIoUs tensor([36.3537], device='cuda:0')
+[10/22 10:20:04] ShapeNetPartNormal INFO: Find a better ckpt @E4, val_ins_miou 36.35 val_cls_miou 36.35, 
+cls_mious: tensor([36.3537], device='cuda:0')
+[10/22 10:20:05] ShapeNetPartNormal INFO: Found the best model and saved in log/shapenetpart/shapenetpart-train-pointnext-s-ngpus1-seed171-20241022-100411-kXa9X7Gq2ssq8doZvszZwj/checkpoint/shapenetpart-train-pointnext-s-ngpus1-seed171-20241022-100411-kXa9X7Gq2ssq8doZvszZwj_ckpt_best.pth
+[10/22 10:24:08] ShapeNetPartNormal INFO: Test Epoch [5/300],Instance mIoU 35.93, Class mIoU 35.93, 
+ Class mIoUs tensor([35.9264], device='cuda:0')
+[10/22 10:28:24] ShapeNetPartNormal INFO: Test Epoch [6/300],Instance mIoU 36.07, Class mIoU 36.07, 
+ Class mIoUs tensor([36.0742], device='cuda:0')
+[10/22 10:32:24] ShapeNetPartNormal INFO: Test Epoch [7/300],Instance mIoU 35.92, Class mIoU 35.92, 
+ Class mIoUs tensor([35.9216], device='cuda:0')
+[10/22 10:36:36] ShapeNetPartNormal INFO: Test Epoch [8/300],Instance mIoU 33.76, Class mIoU 33.76, 
+ Class mIoUs tensor([33.7582], device='cuda:0')
+[10/22 10:40:43] ShapeNetPartNormal INFO: Test Epoch [9/300],Instance mIoU 34.72, Class mIoU 34.72, 
+ Class mIoUs tensor([34.7243], device='cuda:0')
+[10/22 10:44:54] ShapeNetPartNormal INFO: Test Epoch [10/300],Instance mIoU 35.80, Class mIoU 35.80, 
+ Class mIoUs tensor([35.8024], device='cuda:0')
+[10/22 10:48:54] ShapeNetPartNormal INFO: Test Epoch [11/300],Instance mIoU 36.24, Class mIoU 36.24, 
+ Class mIoUs tensor([36.2395], device='cuda:0')
+[10/22 10:53:02] ShapeNetPartNormal INFO: Test Epoch [12/300],Instance mIoU 35.96, Class mIoU 35.96, 
+ Class mIoUs tensor([35.9639], device='cuda:0')
+[10/22 10:57:08] ShapeNetPartNormal INFO: Test Epoch [13/300],Instance mIoU 35.97, Class mIoU 35.97, 
+ Class mIoUs tensor([35.9705], device='cuda:0')
+[10/22 11:01:19] ShapeNetPartNormal INFO: Test Epoch [14/300],Instance mIoU 32.43, Class mIoU 32.43, 
+ Class mIoUs tensor([32.4338], device='cuda:0')
+[10/22 11:05:28] ShapeNetPartNormal INFO: Test Epoch [15/300],Instance mIoU 35.17, Class mIoU 35.17, 
+ Class mIoUs tensor([35.1661], device='cuda:0')
+[10/22 11:09:40] ShapeNetPartNormal INFO: Test Epoch [16/300],Instance mIoU 34.30, Class mIoU 34.30, 
+ Class mIoUs tensor([34.2994], device='cuda:0')
+[10/22 11:13:43] ShapeNetPartNormal INFO: Test Epoch [17/300],Instance mIoU 35.79, Class mIoU 35.79, 
+ Class mIoUs tensor([35.7894], device='cuda:0')
+[10/22 11:17:44] ShapeNetPartNormal INFO: Test Epoch [18/300],Instance mIoU 35.90, Class mIoU 35.90, 
+ Class mIoUs tensor([35.8978], device='cuda:0')
+[10/22 11:21:53] ShapeNetPartNormal INFO: Test Epoch [19/300],Instance mIoU 35.27, Class mIoU 35.27, 
+ Class mIoUs tensor([35.2742], device='cuda:0')
+[10/22 11:25:46] ShapeNetPartNormal INFO: Test Epoch [20/300],Instance mIoU 34.21, Class mIoU 34.21, 
+ Class mIoUs tensor([34.2149], device='cuda:0')
+[10/22 11:29:56] ShapeNetPartNormal INFO: Test Epoch [21/300],Instance mIoU 35.93, Class mIoU 35.93, 
+ Class mIoUs tensor([35.9327], device='cuda:0')
+[10/22 11:34:06] ShapeNetPartNormal INFO: Test Epoch [22/300],Instance mIoU 35.11, Class mIoU 35.11, 
+ Class mIoUs tensor([35.1057], device='cuda:0')
+[10/22 11:38:13] ShapeNetPartNormal INFO: Test Epoch [23/300],Instance mIoU 35.54, Class mIoU 35.54, 
+ Class mIoUs tensor([35.5385], device='cuda:0')
+[10/22 11:42:20] ShapeNetPartNormal INFO: Test Epoch [24/300],Instance mIoU 35.74, Class mIoU 35.74, 
+ Class mIoUs tensor([35.7417], device='cuda:0')
+[10/22 11:46:15] ShapeNetPartNormal INFO: Test Epoch [25/300],Instance mIoU 35.65, Class mIoU 35.65, 
+ Class mIoUs tensor([35.6481], device='cuda:0')
+[10/22 11:50:28] ShapeNetPartNormal INFO: Test Epoch [26/300],Instance mIoU 35.68, Class mIoU 35.68, 
+ Class mIoUs tensor([35.6763], device='cuda:0')
+[10/22 11:54:39] ShapeNetPartNormal INFO: Test Epoch [27/300],Instance mIoU 34.99, Class mIoU 34.99, 
+ Class mIoUs tensor([34.9912], device='cuda:0')
+[10/22 11:58:50] ShapeNetPartNormal INFO: Test Epoch [28/300],Instance mIoU 35.76, Class mIoU 35.76, 
+ Class mIoUs tensor([35.7619], device='cuda:0')
+[10/22 12:02:45] ShapeNetPartNormal INFO: Test Epoch [29/300],Instance mIoU 35.36, Class mIoU 35.36, 
+ Class mIoUs tensor([35.3565], device='cuda:0')
+[10/22 12:06:52] ShapeNetPartNormal INFO: Test Epoch [30/300],Instance mIoU 36.05, Class mIoU 36.05, 
+ Class mIoUs tensor([36.0482], device='cuda:0')
+[10/22 12:10:51] ShapeNetPartNormal INFO: Test Epoch [31/300],Instance mIoU 35.59, Class mIoU 35.59, 
+ Class mIoUs tensor([35.5888], device='cuda:0')
+[10/22 12:14:49] ShapeNetPartNormal INFO: Test Epoch [32/300],Instance mIoU 35.02, Class mIoU 35.02, 
+ Class mIoUs tensor([35.0212], device='cuda:0')
+[10/22 12:18:52] ShapeNetPartNormal INFO: Test Epoch [33/300],Instance mIoU 34.85, Class mIoU 34.85, 
+ Class mIoUs tensor([34.8504], device='cuda:0')
+[10/22 12:22:51] ShapeNetPartNormal INFO: Test Epoch [34/300],Instance mIoU 33.34, Class mIoU 33.34, 
+ Class mIoUs tensor([33.3412], device='cuda:0')
+[10/22 12:26:49] ShapeNetPartNormal INFO: Test Epoch [35/300],Instance mIoU 35.52, Class mIoU 35.52, 
+ Class mIoUs tensor([35.5172], device='cuda:0')
+[10/22 12:31:00] ShapeNetPartNormal INFO: Test Epoch [36/300],Instance mIoU 34.91, Class mIoU 34.91, 
+ Class mIoUs tensor([34.9146], device='cuda:0')
+[10/22 12:35:02] ShapeNetPartNormal INFO: Test Epoch [37/300],Instance mIoU 33.59, Class mIoU 33.59, 
+ Class mIoUs tensor([33.5901], device='cuda:0')
+[10/22 12:39:11] ShapeNetPartNormal INFO: Test Epoch [38/300],Instance mIoU 34.05, Class mIoU 34.05, 
+ Class mIoUs tensor([34.0528], device='cuda:0')
+[10/22 12:43:22] ShapeNetPartNormal INFO: Test Epoch [39/300],Instance mIoU 34.49, Class mIoU 34.49, 
+ Class mIoUs tensor([34.4943], device='cuda:0')
+[10/22 12:47:21] ShapeNetPartNormal INFO: Test Epoch [40/300],Instance mIoU 35.77, Class mIoU 35.77, 
+ Class mIoUs tensor([35.7736], device='cuda:0')
+[10/22 12:51:33] ShapeNetPartNormal INFO: Test Epoch [41/300],Instance mIoU 36.31, Class mIoU 36.31, 
+ Class mIoUs tensor([36.3065], device='cuda:0')
+[10/22 12:55:42] ShapeNetPartNormal INFO: Test Epoch [42/300],Instance mIoU 33.65, Class mIoU 33.65, 
+ Class mIoUs tensor([33.6516], device='cuda:0')
+[10/22 12:59:49] ShapeNetPartNormal INFO: Test Epoch [43/300],Instance mIoU 31.37, Class mIoU 31.37, 
+ Class mIoUs tensor([31.3730], device='cuda:0')
+[10/22 13:03:46] ShapeNetPartNormal INFO: Test Epoch [44/300],Instance mIoU 35.02, Class mIoU 35.02, 
+ Class mIoUs tensor([35.0227], device='cuda:0')
+[10/22 13:07:54] ShapeNetPartNormal INFO: Test Epoch [45/300],Instance mIoU 31.77, Class mIoU 31.77, 
+ Class mIoUs tensor([31.7747], device='cuda:0')
+[10/22 13:12:07] ShapeNetPartNormal INFO: Test Epoch [46/300],Instance mIoU 34.53, Class mIoU 34.53, 
+ Class mIoUs tensor([34.5346], device='cuda:0')
+[10/22 13:16:12] ShapeNetPartNormal INFO: Test Epoch [47/300],Instance mIoU 34.30, Class mIoU 34.30, 
+ Class mIoUs tensor([34.2988], device='cuda:0')
+[10/22 13:20:15] ShapeNetPartNormal INFO: Test Epoch [48/300],Instance mIoU 33.30, Class mIoU 33.30, 
+ Class mIoUs tensor([33.2955], device='cuda:0')
+[10/22 13:24:16] ShapeNetPartNormal INFO: Test Epoch [49/300],Instance mIoU 32.97, Class mIoU 32.97, 
+ Class mIoUs tensor([32.9689], device='cuda:0')
+[10/22 13:28:17] ShapeNetPartNormal INFO: Test Epoch [50/300],Instance mIoU 34.51, Class mIoU 34.51, 
+ Class mIoUs tensor([34.5098], device='cuda:0')
+[10/22 13:32:08] ShapeNetPartNormal INFO: Test Epoch [51/300],Instance mIoU 33.91, Class mIoU 33.91, 
+ Class mIoUs tensor([33.9074], device='cuda:0')
+[10/22 13:36:10] ShapeNetPartNormal INFO: Test Epoch [52/300],Instance mIoU 34.02, Class mIoU 34.02, 
+ Class mIoUs tensor([34.0161], device='cuda:0')
+[10/22 13:40:06] ShapeNetPartNormal INFO: Test Epoch [53/300],Instance mIoU 30.52, Class mIoU 30.52, 
+ Class mIoUs tensor([30.5160], device='cuda:0')
+[10/22 13:44:03] ShapeNetPartNormal INFO: Test Epoch [54/300],Instance mIoU 30.28, Class mIoU 30.28, 
+ Class mIoUs tensor([30.2835], device='cuda:0')
+[10/22 13:48:11] ShapeNetPartNormal INFO: Test Epoch [55/300],Instance mIoU 34.72, Class mIoU 34.72, 
+ Class mIoUs tensor([34.7240], device='cuda:0')
+[10/22 13:52:20] ShapeNetPartNormal INFO: Test Epoch [56/300],Instance mIoU 29.63, Class mIoU 29.63, 
+ Class mIoUs tensor([29.6291], device='cuda:0')
+[10/22 13:56:28] ShapeNetPartNormal INFO: Test Epoch [57/300],Instance mIoU 34.77, Class mIoU 34.77, 
+ Class mIoUs tensor([34.7674], device='cuda:0')
+[10/22 14:00:39] ShapeNetPartNormal INFO: Test Epoch [58/300],Instance mIoU 35.40, Class mIoU 35.40, 
+ Class mIoUs tensor([35.3974], device='cuda:0')
+[10/22 14:04:46] ShapeNetPartNormal INFO: Test Epoch [59/300],Instance mIoU 35.25, Class mIoU 35.25, 
+ Class mIoUs tensor([35.2530], device='cuda:0')
+[10/22 14:09:00] ShapeNetPartNormal INFO: Test Epoch [60/300],Instance mIoU 35.75, Class mIoU 35.75, 
+ Class mIoUs tensor([35.7518], device='cuda:0')
+[10/22 14:13:02] ShapeNetPartNormal INFO: Test Epoch [61/300],Instance mIoU 34.68, Class mIoU 34.68, 
+ Class mIoUs tensor([34.6765], device='cuda:0')
+[10/22 14:17:10] ShapeNetPartNormal INFO: Test Epoch [62/300],Instance mIoU 35.04, Class mIoU 35.04, 
+ Class mIoUs tensor([35.0438], device='cuda:0')
+[10/22 14:21:18] ShapeNetPartNormal INFO: Test Epoch [63/300],Instance mIoU 30.06, Class mIoU 30.06, 
+ Class mIoUs tensor([30.0610], device='cuda:0')
+[10/22 14:25:20] ShapeNetPartNormal INFO: Test Epoch [64/300],Instance mIoU 30.83, Class mIoU 30.83, 
+ Class mIoUs tensor([30.8268], device='cuda:0')
+[10/22 14:29:24] ShapeNetPartNormal INFO: Test Epoch [65/300],Instance mIoU 35.94, Class mIoU 35.94, 
+ Class mIoUs tensor([35.9439], device='cuda:0')
+[10/22 14:33:31] ShapeNetPartNormal INFO: Test Epoch [66/300],Instance mIoU 30.89, Class mIoU 30.89, 
+ Class mIoUs tensor([30.8930], device='cuda:0')
+[10/22 14:37:38] ShapeNetPartNormal INFO: Test Epoch [67/300],Instance mIoU 30.67, Class mIoU 30.67, 
+ Class mIoUs tensor([30.6658], device='cuda:0')
+[10/22 14:41:48] ShapeNetPartNormal INFO: Test Epoch [68/300],Instance mIoU 31.68, Class mIoU 31.68, 
+ Class mIoUs tensor([31.6759], device='cuda:0')
+[10/22 14:45:58] ShapeNetPartNormal INFO: Test Epoch [69/300],Instance mIoU 35.04, Class mIoU 35.04, 
+ Class mIoUs tensor([35.0396], device='cuda:0')
+[10/22 14:50:06] ShapeNetPartNormal INFO: Test Epoch [70/300],Instance mIoU 35.38, Class mIoU 35.37, 
+ Class mIoUs tensor([35.3750], device='cuda:0')
+[10/22 14:54:18] ShapeNetPartNormal INFO: Test Epoch [71/300],Instance mIoU 34.43, Class mIoU 34.43, 
+ Class mIoUs tensor([34.4315], device='cuda:0')
+[10/22 14:58:31] ShapeNetPartNormal INFO: Test Epoch [72/300],Instance mIoU 34.33, Class mIoU 34.33, 
+ Class mIoUs tensor([34.3295], device='cuda:0')
+[10/22 15:02:46] ShapeNetPartNormal INFO: Test Epoch [73/300],Instance mIoU 35.46, Class mIoU 35.46, 
+ Class mIoUs tensor([35.4626], device='cuda:0')
+[10/22 15:06:52] ShapeNetPartNormal INFO: Test Epoch [74/300],Instance mIoU 33.44, Class mIoU 33.44, 
+ Class mIoUs tensor([33.4408], device='cuda:0')
+[10/22 15:11:08] ShapeNetPartNormal INFO: Test Epoch [75/300],Instance mIoU 31.31, Class mIoU 31.31, 
+ Class mIoUs tensor([31.3134], device='cuda:0')
+[10/22 15:15:08] ShapeNetPartNormal INFO: Test Epoch [76/300],Instance mIoU 34.37, Class mIoU 34.37, 
+ Class mIoUs tensor([34.3727], device='cuda:0')
+[10/22 15:19:28] ShapeNetPartNormal INFO: Test Epoch [77/300],Instance mIoU 37.16, Class mIoU 37.16, 
+ Class mIoUs tensor([37.1570], device='cuda:0')
+[10/22 15:19:28] ShapeNetPartNormal INFO: Find a better ckpt @E77, val_ins_miou 37.16 val_cls_miou 37.16, 
+cls_mious: tensor([37.1570], device='cuda:0')
+[10/22 15:19:28] ShapeNetPartNormal INFO: Found the best model and saved in log/shapenetpart/shapenetpart-train-pointnext-s-ngpus1-seed171-20241022-100411-kXa9X7Gq2ssq8doZvszZwj/checkpoint/shapenetpart-train-pointnext-s-ngpus1-seed171-20241022-100411-kXa9X7Gq2ssq8doZvszZwj_ckpt_best.pth
+[10/22 15:23:25] ShapeNetPartNormal INFO: Test Epoch [78/300],Instance mIoU 34.75, Class mIoU 34.75, 
+ Class mIoUs tensor([34.7464], device='cuda:0')
+[10/22 15:27:35] ShapeNetPartNormal INFO: Test Epoch [79/300],Instance mIoU 35.94, Class mIoU 35.94, 
+ Class mIoUs tensor([35.9435], device='cuda:0')
+[10/22 15:31:42] ShapeNetPartNormal INFO: Test Epoch [80/300],Instance mIoU 30.93, Class mIoU 30.93, 
+ Class mIoUs tensor([30.9283], device='cuda:0')
+[10/22 15:35:46] ShapeNetPartNormal INFO: Test Epoch [81/300],Instance mIoU 32.91, Class mIoU 32.91, 
+ Class mIoUs tensor([32.9150], device='cuda:0')
+[10/22 15:39:56] ShapeNetPartNormal INFO: Test Epoch [82/300],Instance mIoU 38.08, Class mIoU 38.08, 
+ Class mIoUs tensor([38.0753], device='cuda:0')
+[10/22 15:39:56] ShapeNetPartNormal INFO: Find a better ckpt @E82, val_ins_miou 38.08 val_cls_miou 38.08, 
+cls_mious: tensor([38.0753], device='cuda:0')
+[10/22 15:39:56] ShapeNetPartNormal INFO: Found the best model and saved in log/shapenetpart/shapenetpart-train-pointnext-s-ngpus1-seed171-20241022-100411-kXa9X7Gq2ssq8doZvszZwj/checkpoint/shapenetpart-train-pointnext-s-ngpus1-seed171-20241022-100411-kXa9X7Gq2ssq8doZvszZwj_ckpt_best.pth
+[10/22 15:43:56] ShapeNetPartNormal INFO: Test Epoch [83/300],Instance mIoU 37.37, Class mIoU 37.37, 
+ Class mIoUs tensor([37.3653], device='cuda:0')
+[10/22 15:48:10] ShapeNetPartNormal INFO: Test Epoch [84/300],Instance mIoU 34.87, Class mIoU 34.87, 
+ Class mIoUs tensor([34.8707], device='cuda:0')
+[10/22 15:52:14] ShapeNetPartNormal INFO: Test Epoch [85/300],Instance mIoU 32.69, Class mIoU 32.69, 
+ Class mIoUs tensor([32.6905], device='cuda:0')
+[10/22 15:56:22] ShapeNetPartNormal INFO: Test Epoch [86/300],Instance mIoU 31.13, Class mIoU 31.13, 
+ Class mIoUs tensor([31.1320], device='cuda:0')
+[10/22 16:00:44] ShapeNetPartNormal INFO: Test Epoch [87/300],Instance mIoU 37.23, Class mIoU 37.23, 
+ Class mIoUs tensor([37.2277], device='cuda:0')
+[10/22 16:04:42] ShapeNetPartNormal INFO: Test Epoch [88/300],Instance mIoU 36.78, Class mIoU 36.78, 
+ Class mIoUs tensor([36.7796], device='cuda:0')
+[10/22 16:08:49] ShapeNetPartNormal INFO: Test Epoch [89/300],Instance mIoU 32.88, Class mIoU 32.88, 
+ Class mIoUs tensor([32.8778], device='cuda:0')
+[10/22 16:12:59] ShapeNetPartNormal INFO: Test Epoch [90/300],Instance mIoU 36.98, Class mIoU 36.98, 
+ Class mIoUs tensor([36.9779], device='cuda:0')
+[10/22 16:17:10] ShapeNetPartNormal INFO: Test Epoch [91/300],Instance mIoU 37.68, Class mIoU 37.68, 
+ Class mIoUs tensor([37.6765], device='cuda:0')
+[10/22 16:21:10] ShapeNetPartNormal INFO: Test Epoch [92/300],Instance mIoU 29.78, Class mIoU 29.78, 
+ Class mIoUs tensor([29.7771], device='cuda:0')
+[10/22 16:25:07] ShapeNetPartNormal INFO: Test Epoch [93/300],Instance mIoU 35.72, Class mIoU 35.72, 
+ Class mIoUs tensor([35.7195], device='cuda:0')
+[10/22 16:29:04] ShapeNetPartNormal INFO: Test Epoch [94/300],Instance mIoU 35.81, Class mIoU 35.81, 
+ Class mIoUs tensor([35.8124], device='cuda:0')
+[10/22 16:33:08] ShapeNetPartNormal INFO: Test Epoch [95/300],Instance mIoU 34.37, Class mIoU 34.37, 
+ Class mIoUs tensor([34.3695], device='cuda:0')
+[10/22 16:37:17] ShapeNetPartNormal INFO: Test Epoch [96/300],Instance mIoU 35.97, Class mIoU 35.97, 
+ Class mIoUs tensor([35.9662], device='cuda:0')
+[10/22 16:41:19] ShapeNetPartNormal INFO: Test Epoch [97/300],Instance mIoU 37.13, Class mIoU 37.13, 
+ Class mIoUs tensor([37.1324], device='cuda:0')
+[10/22 16:45:07] ShapeNetPartNormal INFO: Test Epoch [98/300],Instance mIoU 37.64, Class mIoU 37.64, 
+ Class mIoUs tensor([37.6436], device='cuda:0')
+[10/22 16:49:10] ShapeNetPartNormal INFO: Test Epoch [99/300],Instance mIoU 36.28, Class mIoU 36.28, 
+ Class mIoUs tensor([36.2783], device='cuda:0')
+[10/22 16:53:04] ShapeNetPartNormal INFO: Test Epoch [100/300],Instance mIoU 29.96, Class mIoU 29.96, 
+ Class mIoUs tensor([29.9638], device='cuda:0')
+[10/22 16:57:18] ShapeNetPartNormal INFO: Test Epoch [101/300],Instance mIoU 34.39, Class mIoU 34.39, 
+ Class mIoUs tensor([34.3933], device='cuda:0')
+[10/22 17:01:27] ShapeNetPartNormal INFO: Test Epoch [102/300],Instance mIoU 37.47, Class mIoU 37.47, 
+ Class mIoUs tensor([37.4650], device='cuda:0')
+[10/22 17:05:39] ShapeNetPartNormal INFO: Test Epoch [103/300],Instance mIoU 32.86, Class mIoU 32.86, 
+ Class mIoUs tensor([32.8563], device='cuda:0')
+[10/22 17:09:54] ShapeNetPartNormal INFO: Test Epoch [104/300],Instance mIoU 34.51, Class mIoU 34.51, 
+ Class mIoUs tensor([34.5079], device='cuda:0')
+[10/22 17:14:04] ShapeNetPartNormal INFO: Test Epoch [105/300],Instance mIoU 34.26, Class mIoU 34.26, 
+ Class mIoUs tensor([34.2598], device='cuda:0')
+[10/22 17:18:02] ShapeNetPartNormal INFO: Test Epoch [106/300],Instance mIoU 37.24, Class mIoU 37.24, 
+ Class mIoUs tensor([37.2417], device='cuda:0')
+[10/22 17:22:09] ShapeNetPartNormal INFO: Test Epoch [107/300],Instance mIoU 36.93, Class mIoU 36.93, 
+ Class mIoUs tensor([36.9258], device='cuda:0')
+[10/22 17:26:14] ShapeNetPartNormal INFO: Test Epoch [108/300],Instance mIoU 36.93, Class mIoU 36.93, 
+ Class mIoUs tensor([36.9320], device='cuda:0')
+[10/22 17:30:22] ShapeNetPartNormal INFO: Test Epoch [109/300],Instance mIoU 37.34, Class mIoU 37.34, 
+ Class mIoUs tensor([37.3369], device='cuda:0')
+[10/22 17:34:40] ShapeNetPartNormal INFO: Test Epoch [110/300],Instance mIoU 33.65, Class mIoU 33.65, 
+ Class mIoUs tensor([33.6458], device='cuda:0')
+[10/22 17:38:35] ShapeNetPartNormal INFO: Test Epoch [111/300],Instance mIoU 35.23, Class mIoU 35.23, 
+ Class mIoUs tensor([35.2318], device='cuda:0')
+[10/22 17:42:44] ShapeNetPartNormal INFO: Test Epoch [112/300],Instance mIoU 35.31, Class mIoU 35.31, 
+ Class mIoUs tensor([35.3113], device='cuda:0')
+[10/22 17:46:59] ShapeNetPartNormal INFO: Test Epoch [113/300],Instance mIoU 32.71, Class mIoU 32.71, 
+ Class mIoUs tensor([32.7116], device='cuda:0')
+[10/22 17:51:05] ShapeNetPartNormal INFO: Test Epoch [114/300],Instance mIoU 30.21, Class mIoU 30.21, 
+ Class mIoUs tensor([30.2136], device='cuda:0')
+[10/22 17:55:12] ShapeNetPartNormal INFO: Test Epoch [115/300],Instance mIoU 34.57, Class mIoU 34.57, 
+ Class mIoUs tensor([34.5750], device='cuda:0')
+[10/22 17:59:20] ShapeNetPartNormal INFO: Test Epoch [116/300],Instance mIoU 37.18, Class mIoU 37.18, 
+ Class mIoUs tensor([37.1790], device='cuda:0')
+[10/22 18:03:29] ShapeNetPartNormal INFO: Test Epoch [117/300],Instance mIoU 37.62, Class mIoU 37.62, 
+ Class mIoUs tensor([37.6153], device='cuda:0')
+[10/22 18:07:38] ShapeNetPartNormal INFO: Test Epoch [118/300],Instance mIoU 36.49, Class mIoU 36.49, 
+ Class mIoUs tensor([36.4948], device='cuda:0')
+[10/22 18:11:51] ShapeNetPartNormal INFO: Test Epoch [119/300],Instance mIoU 37.55, Class mIoU 37.55, 
+ Class mIoUs tensor([37.5529], device='cuda:0')
+[10/22 18:16:02] ShapeNetPartNormal INFO: Test Epoch [120/300],Instance mIoU 30.12, Class mIoU 30.12, 
+ Class mIoUs tensor([30.1160], device='cuda:0')
+[10/22 18:20:02] ShapeNetPartNormal INFO: Test Epoch [121/300],Instance mIoU 33.60, Class mIoU 33.60, 
+ Class mIoUs tensor([33.6023], device='cuda:0')
+[10/22 18:24:17] ShapeNetPartNormal INFO: Test Epoch [122/300],Instance mIoU 34.02, Class mIoU 34.02, 
+ Class mIoUs tensor([34.0191], device='cuda:0')
+[10/22 18:28:24] ShapeNetPartNormal INFO: Test Epoch [123/300],Instance mIoU 35.11, Class mIoU 35.11, 
+ Class mIoUs tensor([35.1065], device='cuda:0')
+[10/22 18:32:30] ShapeNetPartNormal INFO: Test Epoch [124/300],Instance mIoU 33.63, Class mIoU 33.63, 
+ Class mIoUs tensor([33.6289], device='cuda:0')
+[10/22 18:36:38] ShapeNetPartNormal INFO: Test Epoch [125/300],Instance mIoU 37.40, Class mIoU 37.40, 
+ Class mIoUs tensor([37.4024], device='cuda:0')
+[10/22 18:40:40] ShapeNetPartNormal INFO: Test Epoch [126/300],Instance mIoU 34.47, Class mIoU 34.47, 
+ Class mIoUs tensor([34.4741], device='cuda:0')
+[10/22 18:44:49] ShapeNetPartNormal INFO: Test Epoch [127/300],Instance mIoU 34.31, Class mIoU 34.31, 
+ Class mIoUs tensor([34.3150], device='cuda:0')
+[10/22 18:48:56] ShapeNetPartNormal INFO: Test Epoch [128/300],Instance mIoU 37.26, Class mIoU 37.26, 
+ Class mIoUs tensor([37.2576], device='cuda:0')
+[10/22 18:52:56] ShapeNetPartNormal INFO: Test Epoch [129/300],Instance mIoU 37.08, Class mIoU 37.08, 
+ Class mIoUs tensor([37.0752], device='cuda:0')
+[10/22 18:57:04] ShapeNetPartNormal INFO: Test Epoch [130/300],Instance mIoU 36.41, Class mIoU 36.41, 
+ Class mIoUs tensor([36.4069], device='cuda:0')
+[10/22 19:01:12] ShapeNetPartNormal INFO: Test Epoch [131/300],Instance mIoU 37.67, Class mIoU 37.67, 
+ Class mIoUs tensor([37.6713], device='cuda:0')
+[10/22 19:05:14] ShapeNetPartNormal INFO: Test Epoch [132/300],Instance mIoU 34.96, Class mIoU 34.96, 
+ Class mIoUs tensor([34.9557], device='cuda:0')
+[10/22 19:09:14] ShapeNetPartNormal INFO: Test Epoch [133/300],Instance mIoU 34.10, Class mIoU 34.10, 
+ Class mIoUs tensor([34.1044], device='cuda:0')
+[10/22 19:13:23] ShapeNetPartNormal INFO: Test Epoch [134/300],Instance mIoU 37.16, Class mIoU 37.16, 
+ Class mIoUs tensor([37.1566], device='cuda:0')
+[10/22 19:17:25] ShapeNetPartNormal INFO: Test Epoch [135/300],Instance mIoU 31.20, Class mIoU 31.20, 
+ Class mIoUs tensor([31.1951], device='cuda:0')
+[10/22 19:21:25] ShapeNetPartNormal INFO: Test Epoch [136/300],Instance mIoU 36.82, Class mIoU 36.82, 
+ Class mIoUs tensor([36.8238], device='cuda:0')
+[10/22 19:25:29] ShapeNetPartNormal INFO: Test Epoch [137/300],Instance mIoU 33.34, Class mIoU 33.34, 
+ Class mIoUs tensor([33.3377], device='cuda:0')
+[10/22 19:29:37] ShapeNetPartNormal INFO: Test Epoch [138/300],Instance mIoU 36.79, Class mIoU 36.79, 
+ Class mIoUs tensor([36.7856], device='cuda:0')
+[10/22 19:33:42] ShapeNetPartNormal INFO: Test Epoch [139/300],Instance mIoU 35.54, Class mIoU 35.54, 
+ Class mIoUs tensor([35.5419], device='cuda:0')
+[10/22 19:37:48] ShapeNetPartNormal INFO: Test Epoch [140/300],Instance mIoU 34.03, Class mIoU 34.03, 
+ Class mIoUs tensor([34.0285], device='cuda:0')
+[10/22 19:41:54] ShapeNetPartNormal INFO: Test Epoch [141/300],Instance mIoU 34.18, Class mIoU 34.18, 
+ Class mIoUs tensor([34.1753], device='cuda:0')
+[10/22 19:45:56] ShapeNetPartNormal INFO: Test Epoch [142/300],Instance mIoU 30.77, Class mIoU 30.77, 
+ Class mIoUs tensor([30.7745], device='cuda:0')
+[10/22 19:50:03] ShapeNetPartNormal INFO: Test Epoch [143/300],Instance mIoU 34.22, Class mIoU 34.22, 
+ Class mIoUs tensor([34.2246], device='cuda:0')
+[10/22 19:53:57] ShapeNetPartNormal INFO: Test Epoch [144/300],Instance mIoU 31.24, Class mIoU 31.24, 
+ Class mIoUs tensor([31.2363], device='cuda:0')
+[10/22 19:58:05] ShapeNetPartNormal INFO: Test Epoch [145/300],Instance mIoU 34.91, Class mIoU 34.91, 
+ Class mIoUs tensor([34.9053], device='cuda:0')
+[10/22 20:02:09] ShapeNetPartNormal INFO: Test Epoch [146/300],Instance mIoU 35.17, Class mIoU 35.17, 
+ Class mIoUs tensor([35.1707], device='cuda:0')
+[10/22 20:06:18] ShapeNetPartNormal INFO: Test Epoch [147/300],Instance mIoU 36.58, Class mIoU 36.58, 
+ Class mIoUs tensor([36.5806], device='cuda:0')
+[10/22 20:10:29] ShapeNetPartNormal INFO: Test Epoch [148/300],Instance mIoU 37.78, Class mIoU 37.78, 
+ Class mIoUs tensor([37.7815], device='cuda:0')
+[10/22 20:14:49] ShapeNetPartNormal INFO: Test Epoch [149/300],Instance mIoU 37.98, Class mIoU 37.98, 
+ Class mIoUs tensor([37.9754], device='cuda:0')
+[10/22 20:18:48] ShapeNetPartNormal INFO: Test Epoch [150/300],Instance mIoU 38.40, Class mIoU 38.40, 
+ Class mIoUs tensor([38.4012], device='cuda:0')
+[10/22 20:18:48] ShapeNetPartNormal INFO: Find a better ckpt @E150, val_ins_miou 38.40 val_cls_miou 38.40, 
+cls_mious: tensor([38.4012], device='cuda:0')
+[10/22 20:18:48] ShapeNetPartNormal INFO: Found the best model and saved in log/shapenetpart/shapenetpart-train-pointnext-s-ngpus1-seed171-20241022-100411-kXa9X7Gq2ssq8doZvszZwj/checkpoint/shapenetpart-train-pointnext-s-ngpus1-seed171-20241022-100411-kXa9X7Gq2ssq8doZvszZwj_ckpt_best.pth
+[10/22 20:22:55] ShapeNetPartNormal INFO: Test Epoch [151/300],Instance mIoU 35.02, Class mIoU 35.02, 
+ Class mIoUs tensor([35.0243], device='cuda:0')
+[10/22 20:27:03] ShapeNetPartNormal INFO: Test Epoch [152/300],Instance mIoU 37.52, Class mIoU 37.52, 
+ Class mIoUs tensor([37.5204], device='cuda:0')
+[10/22 20:31:13] ShapeNetPartNormal INFO: Test Epoch [153/300],Instance mIoU 34.05, Class mIoU 34.05, 
+ Class mIoUs tensor([34.0452], device='cuda:0')
+[10/22 20:35:21] ShapeNetPartNormal INFO: Test Epoch [154/300],Instance mIoU 34.72, Class mIoU 34.72, 
+ Class mIoUs tensor([34.7160], device='cuda:0')
+[10/22 20:39:29] ShapeNetPartNormal INFO: Test Epoch [155/300],Instance mIoU 35.19, Class mIoU 35.19, 
+ Class mIoUs tensor([35.1894], device='cuda:0')
+[10/22 20:43:37] ShapeNetPartNormal INFO: Test Epoch [156/300],Instance mIoU 36.05, Class mIoU 36.05, 
+ Class mIoUs tensor([36.0532], device='cuda:0')
+[10/22 20:47:37] ShapeNetPartNormal INFO: Test Epoch [157/300],Instance mIoU 37.49, Class mIoU 37.49, 
+ Class mIoUs tensor([37.4948], device='cuda:0')
+[10/22 20:51:55] ShapeNetPartNormal INFO: Test Epoch [158/300],Instance mIoU 36.09, Class mIoU 36.09, 
+ Class mIoUs tensor([36.0866], device='cuda:0')
+[10/22 20:56:08] ShapeNetPartNormal INFO: Test Epoch [159/300],Instance mIoU 37.16, Class mIoU 37.16, 
+ Class mIoUs tensor([37.1622], device='cuda:0')
+[10/22 21:00:16] ShapeNetPartNormal INFO: Test Epoch [160/300],Instance mIoU 37.58, Class mIoU 37.58, 
+ Class mIoUs tensor([37.5824], device='cuda:0')
+[10/22 21:04:26] ShapeNetPartNormal INFO: Test Epoch [161/300],Instance mIoU 34.00, Class mIoU 34.00, 
+ Class mIoUs tensor([33.9994], device='cuda:0')
+[10/22 21:08:38] ShapeNetPartNormal INFO: Test Epoch [162/300],Instance mIoU 31.98, Class mIoU 31.98, 
+ Class mIoUs tensor([31.9818], device='cuda:0')
+[10/22 21:12:41] ShapeNetPartNormal INFO: Test Epoch [163/300],Instance mIoU 34.01, Class mIoU 34.01, 
+ Class mIoUs tensor([34.0125], device='cuda:0')
+[10/22 21:16:50] ShapeNetPartNormal INFO: Test Epoch [164/300],Instance mIoU 36.54, Class mIoU 36.54, 
+ Class mIoUs tensor([36.5421], device='cuda:0')
+[10/22 21:20:45] ShapeNetPartNormal INFO: Test Epoch [165/300],Instance mIoU 34.13, Class mIoU 34.13, 
+ Class mIoUs tensor([34.1256], device='cuda:0')
+[10/22 21:24:40] ShapeNetPartNormal INFO: Test Epoch [166/300],Instance mIoU 34.41, Class mIoU 34.41, 
+ Class mIoUs tensor([34.4102], device='cuda:0')
+[10/22 21:28:56] ShapeNetPartNormal INFO: Test Epoch [167/300],Instance mIoU 34.94, Class mIoU 34.94, 
+ Class mIoUs tensor([34.9387], device='cuda:0')
+[10/22 21:33:00] ShapeNetPartNormal INFO: Test Epoch [168/300],Instance mIoU 33.62, Class mIoU 33.62, 
+ Class mIoUs tensor([33.6222], device='cuda:0')
+[10/22 21:37:07] ShapeNetPartNormal INFO: Test Epoch [169/300],Instance mIoU 36.47, Class mIoU 36.47, 
+ Class mIoUs tensor([36.4653], device='cuda:0')
+[10/22 21:41:15] ShapeNetPartNormal INFO: Test Epoch [170/300],Instance mIoU 37.68, Class mIoU 37.68, 
+ Class mIoUs tensor([37.6846], device='cuda:0')
+[10/22 21:45:27] ShapeNetPartNormal INFO: Test Epoch [171/300],Instance mIoU 37.57, Class mIoU 37.57, 
+ Class mIoUs tensor([37.5701], device='cuda:0')
+[10/22 21:49:34] ShapeNetPartNormal INFO: Test Epoch [172/300],Instance mIoU 34.64, Class mIoU 34.64, 
+ Class mIoUs tensor([34.6404], device='cuda:0')
+[10/22 21:53:45] ShapeNetPartNormal INFO: Test Epoch [173/300],Instance mIoU 31.61, Class mIoU 31.61, 
+ Class mIoUs tensor([31.6149], device='cuda:0')
+[10/22 21:57:57] ShapeNetPartNormal INFO: Test Epoch [174/300],Instance mIoU 34.65, Class mIoU 34.65, 
+ Class mIoUs tensor([34.6453], device='cuda:0')
+[10/22 22:02:04] ShapeNetPartNormal INFO: Test Epoch [175/300],Instance mIoU 30.93, Class mIoU 30.93, 
+ Class mIoUs tensor([30.9348], device='cuda:0')
+[10/22 22:06:10] ShapeNetPartNormal INFO: Test Epoch [176/300],Instance mIoU 37.02, Class mIoU 37.02, 
+ Class mIoUs tensor([37.0212], device='cuda:0')
+[10/22 22:10:24] ShapeNetPartNormal INFO: Test Epoch [177/300],Instance mIoU 33.87, Class mIoU 33.87, 
+ Class mIoUs tensor([33.8692], device='cuda:0')
+[10/22 22:14:28] ShapeNetPartNormal INFO: Test Epoch [178/300],Instance mIoU 37.14, Class mIoU 37.14, 
+ Class mIoUs tensor([37.1431], device='cuda:0')
+[10/22 22:18:31] ShapeNetPartNormal INFO: Test Epoch [179/300],Instance mIoU 36.56, Class mIoU 36.56, 
+ Class mIoUs tensor([36.5601], device='cuda:0')
+[10/22 22:22:24] ShapeNetPartNormal INFO: Test Epoch [180/300],Instance mIoU 31.93, Class mIoU 31.93, 
+ Class mIoUs tensor([31.9342], device='cuda:0')
+[10/22 22:26:33] ShapeNetPartNormal INFO: Test Epoch [181/300],Instance mIoU 37.74, Class mIoU 37.74, 
+ Class mIoUs tensor([37.7432], device='cuda:0')
+[10/22 22:30:40] ShapeNetPartNormal INFO: Test Epoch [182/300],Instance mIoU 36.32, Class mIoU 36.32, 
+ Class mIoUs tensor([36.3178], device='cuda:0')
+[10/22 22:34:41] ShapeNetPartNormal INFO: Test Epoch [183/300],Instance mIoU 33.24, Class mIoU 33.24, 
+ Class mIoUs tensor([33.2425], device='cuda:0')
+[10/22 22:38:45] ShapeNetPartNormal INFO: Test Epoch [184/300],Instance mIoU 35.40, Class mIoU 35.40, 
+ Class mIoUs tensor([35.4013], device='cuda:0')
+[10/22 22:42:52] ShapeNetPartNormal INFO: Test Epoch [185/300],Instance mIoU 33.64, Class mIoU 33.64, 
+ Class mIoUs tensor([33.6432], device='cuda:0')
+[10/22 22:47:11] ShapeNetPartNormal INFO: Test Epoch [186/300],Instance mIoU 34.23, Class mIoU 34.23, 
+ Class mIoUs tensor([34.2328], device='cuda:0')
+[10/22 22:51:15] ShapeNetPartNormal INFO: Test Epoch [187/300],Instance mIoU 34.07, Class mIoU 34.07, 
+ Class mIoUs tensor([34.0721], device='cuda:0')
+[10/22 22:55:24] ShapeNetPartNormal INFO: Test Epoch [188/300],Instance mIoU 34.84, Class mIoU 34.84, 
+ Class mIoUs tensor([34.8374], device='cuda:0')
+[10/22 22:59:29] ShapeNetPartNormal INFO: Test Epoch [189/300],Instance mIoU 33.86, Class mIoU 33.86, 
+ Class mIoUs tensor([33.8563], device='cuda:0')
+[10/22 23:03:41] ShapeNetPartNormal INFO: Test Epoch [190/300],Instance mIoU 30.64, Class mIoU 30.64, 
+ Class mIoUs tensor([30.6438], device='cuda:0')
+[10/22 23:07:50] ShapeNetPartNormal INFO: Test Epoch [191/300],Instance mIoU 34.80, Class mIoU 34.80, 
+ Class mIoUs tensor([34.8043], device='cuda:0')
+[10/22 23:11:59] ShapeNetPartNormal INFO: Test Epoch [192/300],Instance mIoU 32.15, Class mIoU 32.15, 
+ Class mIoUs tensor([32.1531], device='cuda:0')
+[10/22 23:16:06] ShapeNetPartNormal INFO: Test Epoch [193/300],Instance mIoU 35.41, Class mIoU 35.41, 
+ Class mIoUs tensor([35.4147], device='cuda:0')
+[10/22 23:20:13] ShapeNetPartNormal INFO: Test Epoch [194/300],Instance mIoU 37.49, Class mIoU 37.49, 
+ Class mIoUs tensor([37.4883], device='cuda:0')
+[10/22 23:24:16] ShapeNetPartNormal INFO: Test Epoch [195/300],Instance mIoU 36.42, Class mIoU 36.42, 
+ Class mIoUs tensor([36.4175], device='cuda:0')
+[10/22 23:28:25] ShapeNetPartNormal INFO: Test Epoch [196/300],Instance mIoU 37.18, Class mIoU 37.18, 
+ Class mIoUs tensor([37.1824], device='cuda:0')
+[10/22 23:32:32] ShapeNetPartNormal INFO: Test Epoch [197/300],Instance mIoU 36.72, Class mIoU 36.72, 
+ Class mIoUs tensor([36.7172], device='cuda:0')
+[10/22 23:36:45] ShapeNetPartNormal INFO: Test Epoch [198/300],Instance mIoU 34.32, Class mIoU 34.32, 
+ Class mIoUs tensor([34.3170], device='cuda:0')
+[10/22 23:40:51] ShapeNetPartNormal INFO: Test Epoch [199/300],Instance mIoU 36.83, Class mIoU 36.83, 
+ Class mIoUs tensor([36.8290], device='cuda:0')
+[10/22 23:44:59] ShapeNetPartNormal INFO: Test Epoch [200/300],Instance mIoU 36.52, Class mIoU 36.52, 
+ Class mIoUs tensor([36.5157], device='cuda:0')
+[10/22 23:49:07] ShapeNetPartNormal INFO: Test Epoch [201/300],Instance mIoU 34.30, Class mIoU 34.30, 
+ Class mIoUs tensor([34.2966], device='cuda:0')
+[10/22 23:53:14] ShapeNetPartNormal INFO: Test Epoch [202/300],Instance mIoU 36.91, Class mIoU 36.91, 
+ Class mIoUs tensor([36.9076], device='cuda:0')
+[10/22 23:57:11] ShapeNetPartNormal INFO: Test Epoch [203/300],Instance mIoU 34.92, Class mIoU 34.92, 
+ Class mIoUs tensor([34.9202], device='cuda:0')
+[10/23 00:01:18] ShapeNetPartNormal INFO: Test Epoch [204/300],Instance mIoU 30.81, Class mIoU 30.81, 
+ Class mIoUs tensor([30.8065], device='cuda:0')
+[10/23 00:05:34] ShapeNetPartNormal INFO: Test Epoch [205/300],Instance mIoU 35.85, Class mIoU 35.85, 
+ Class mIoUs tensor([35.8515], device='cuda:0')
+[10/23 00:09:32] ShapeNetPartNormal INFO: Test Epoch [206/300],Instance mIoU 36.88, Class mIoU 36.88, 
+ Class mIoUs tensor([36.8788], device='cuda:0')
+[10/23 00:13:44] ShapeNetPartNormal INFO: Test Epoch [207/300],Instance mIoU 34.02, Class mIoU 34.02, 
+ Class mIoUs tensor([34.0218], device='cuda:0')
+[10/23 00:17:38] ShapeNetPartNormal INFO: Test Epoch [208/300],Instance mIoU 34.05, Class mIoU 34.05, 
+ Class mIoUs tensor([34.0532], device='cuda:0')
+[10/23 00:21:50] ShapeNetPartNormal INFO: Test Epoch [209/300],Instance mIoU 35.98, Class mIoU 35.98, 
+ Class mIoUs tensor([35.9828], device='cuda:0')
+[10/23 00:26:02] ShapeNetPartNormal INFO: Test Epoch [210/300],Instance mIoU 35.90, Class mIoU 35.90, 
+ Class mIoUs tensor([35.8951], device='cuda:0')
+[10/23 00:30:10] ShapeNetPartNormal INFO: Test Epoch [211/300],Instance mIoU 36.42, Class mIoU 36.42, 
+ Class mIoUs tensor([36.4170], device='cuda:0')
+[10/23 00:34:18] ShapeNetPartNormal INFO: Test Epoch [212/300],Instance mIoU 36.50, Class mIoU 36.50, 
+ Class mIoUs tensor([36.4956], device='cuda:0')
+[10/23 00:38:15] ShapeNetPartNormal INFO: Test Epoch [213/300],Instance mIoU 36.44, Class mIoU 36.44, 
+ Class mIoUs tensor([36.4397], device='cuda:0')
+[10/23 00:42:26] ShapeNetPartNormal INFO: Test Epoch [214/300],Instance mIoU 36.51, Class mIoU 36.51, 
+ Class mIoUs tensor([36.5056], device='cuda:0')
+[10/23 00:46:44] ShapeNetPartNormal INFO: Test Epoch [215/300],Instance mIoU 36.55, Class mIoU 36.55, 
+ Class mIoUs tensor([36.5503], device='cuda:0')
+[10/23 00:50:51] ShapeNetPartNormal INFO: Test Epoch [216/300],Instance mIoU 36.59, Class mIoU 36.59, 
+ Class mIoUs tensor([36.5894], device='cuda:0')
+[10/23 00:54:58] ShapeNetPartNormal INFO: Test Epoch [217/300],Instance mIoU 36.59, Class mIoU 36.59, 
+ Class mIoUs tensor([36.5851], device='cuda:0')
+[10/23 00:58:54] ShapeNetPartNormal INFO: Test Epoch [218/300],Instance mIoU 36.54, Class mIoU 36.54, 
+ Class mIoUs tensor([36.5359], device='cuda:0')
+[10/23 01:03:01] ShapeNetPartNormal INFO: Test Epoch [219/300],Instance mIoU 36.37, Class mIoU 36.37, 
+ Class mIoUs tensor([36.3662], device='cuda:0')
+[10/23 01:07:10] ShapeNetPartNormal INFO: Test Epoch [220/300],Instance mIoU 36.29, Class mIoU 36.29, 
+ Class mIoUs tensor([36.2895], device='cuda:0')
+[10/23 01:11:17] ShapeNetPartNormal INFO: Test Epoch [221/300],Instance mIoU 36.23, Class mIoU 36.23, 
+ Class mIoUs tensor([36.2298], device='cuda:0')
+[10/23 01:15:26] ShapeNetPartNormal INFO: Test Epoch [222/300],Instance mIoU 36.27, Class mIoU 36.27, 
+ Class mIoUs tensor([36.2660], device='cuda:0')
+[10/23 01:19:38] ShapeNetPartNormal INFO: Test Epoch [223/300],Instance mIoU 36.19, Class mIoU 36.19, 
+ Class mIoUs tensor([36.1865], device='cuda:0')
+[10/23 01:23:46] ShapeNetPartNormal INFO: Test Epoch [224/300],Instance mIoU 36.17, Class mIoU 36.17, 
+ Class mIoUs tensor([36.1717], device='cuda:0')
+[10/23 01:27:56] ShapeNetPartNormal INFO: Test Epoch [225/300],Instance mIoU 36.17, Class mIoU 36.17, 
+ Class mIoUs tensor([36.1697], device='cuda:0')
+[10/23 01:32:03] ShapeNetPartNormal INFO: Test Epoch [226/300],Instance mIoU 36.12, Class mIoU 36.12, 
+ Class mIoUs tensor([36.1235], device='cuda:0')
+[10/23 01:36:08] ShapeNetPartNormal INFO: Test Epoch [227/300],Instance mIoU 36.07, Class mIoU 36.07, 
+ Class mIoUs tensor([36.0721], device='cuda:0')
+[10/23 01:40:09] ShapeNetPartNormal INFO: Test Epoch [228/300],Instance mIoU 35.98, Class mIoU 35.98, 
+ Class mIoUs tensor([35.9765], device='cuda:0')
+[10/23 01:44:25] ShapeNetPartNormal INFO: Test Epoch [229/300],Instance mIoU 35.98, Class mIoU 35.98, 
+ Class mIoUs tensor([35.9824], device='cuda:0')
+[10/23 01:48:35] ShapeNetPartNormal INFO: Test Epoch [230/300],Instance mIoU 35.89, Class mIoU 35.89, 
+ Class mIoUs tensor([35.8922], device='cuda:0')
+[10/23 01:52:44] ShapeNetPartNormal INFO: Test Epoch [231/300],Instance mIoU 36.00, Class mIoU 36.00, 
+ Class mIoUs tensor([35.9961], device='cuda:0')
+[10/23 01:56:52] ShapeNetPartNormal INFO: Test Epoch [232/300],Instance mIoU 35.79, Class mIoU 35.79, 
+ Class mIoUs tensor([35.7866], device='cuda:0')
+[10/23 02:01:08] ShapeNetPartNormal INFO: Test Epoch [233/300],Instance mIoU 35.67, Class mIoU 35.67, 
+ Class mIoUs tensor([35.6686], device='cuda:0')
+[10/23 02:05:15] ShapeNetPartNormal INFO: Test Epoch [234/300],Instance mIoU 35.63, Class mIoU 35.63, 
+ Class mIoUs tensor([35.6325], device='cuda:0')
+[10/23 02:09:25] ShapeNetPartNormal INFO: Test Epoch [235/300],Instance mIoU 35.45, Class mIoU 35.45, 
+ Class mIoUs tensor([35.4484], device='cuda:0')
+[10/23 02:13:31] ShapeNetPartNormal INFO: Test Epoch [236/300],Instance mIoU 35.36, Class mIoU 35.36, 
+ Class mIoUs tensor([35.3591], device='cuda:0')
+[10/23 02:17:37] ShapeNetPartNormal INFO: Test Epoch [237/300],Instance mIoU 35.14, Class mIoU 35.14, 
+ Class mIoUs tensor([35.1395], device='cuda:0')
+[10/23 02:21:44] ShapeNetPartNormal INFO: Test Epoch [238/300],Instance mIoU 35.24, Class mIoU 35.24, 
+ Class mIoUs tensor([35.2354], device='cuda:0')
+[10/23 02:25:50] ShapeNetPartNormal INFO: Test Epoch [239/300],Instance mIoU 35.17, Class mIoU 35.17, 
+ Class mIoUs tensor([35.1729], device='cuda:0')
+[10/23 02:29:59] ShapeNetPartNormal INFO: Test Epoch [240/300],Instance mIoU 34.96, Class mIoU 34.96, 
+ Class mIoUs tensor([34.9601], device='cuda:0')
+[10/23 02:33:58] ShapeNetPartNormal INFO: Test Epoch [241/300],Instance mIoU 34.98, Class mIoU 34.98, 
+ Class mIoUs tensor([34.9767], device='cuda:0')
+[10/23 02:38:05] ShapeNetPartNormal INFO: Test Epoch [242/300],Instance mIoU 34.89, Class mIoU 34.89, 
+ Class mIoUs tensor([34.8920], device='cuda:0')
+[10/23 02:42:18] ShapeNetPartNormal INFO: Test Epoch [243/300],Instance mIoU 35.05, Class mIoU 35.05, 
+ Class mIoUs tensor([35.0499], device='cuda:0')
+[10/23 02:46:23] ShapeNetPartNormal INFO: Test Epoch [244/300],Instance mIoU 34.98, Class mIoU 34.98, 
+ Class mIoUs tensor([34.9789], device='cuda:0')
+[10/23 02:50:30] ShapeNetPartNormal INFO: Test Epoch [245/300],Instance mIoU 34.91, Class mIoU 34.91, 
+ Class mIoUs tensor([34.9089], device='cuda:0')
+[10/23 02:54:34] ShapeNetPartNormal INFO: Test Epoch [246/300],Instance mIoU 34.77, Class mIoU 34.77, 
+ Class mIoUs tensor([34.7654], device='cuda:0')
+[10/23 02:58:49] ShapeNetPartNormal INFO: Test Epoch [247/300],Instance mIoU 34.78, Class mIoU 34.78, 
+ Class mIoUs tensor([34.7806], device='cuda:0')
+[10/23 03:02:57] ShapeNetPartNormal INFO: Test Epoch [248/300],Instance mIoU 34.65, Class mIoU 34.65, 
+ Class mIoUs tensor([34.6458], device='cuda:0')
+[10/23 03:07:05] ShapeNetPartNormal INFO: Test Epoch [249/300],Instance mIoU 34.60, Class mIoU 34.60, 
+ Class mIoUs tensor([34.6024], device='cuda:0')
+[10/23 03:11:12] ShapeNetPartNormal INFO: Test Epoch [250/300],Instance mIoU 34.52, Class mIoU 34.52, 
+ Class mIoUs tensor([34.5168], device='cuda:0')
+[10/23 03:15:19] ShapeNetPartNormal INFO: Test Epoch [251/300],Instance mIoU 34.42, Class mIoU 34.42, 
+ Class mIoUs tensor([34.4229], device='cuda:0')
+[10/23 03:19:28] ShapeNetPartNormal INFO: Test Epoch [252/300],Instance mIoU 34.26, Class mIoU 34.26, 
+ Class mIoUs tensor([34.2557], device='cuda:0')
+[10/23 03:23:36] ShapeNetPartNormal INFO: Test Epoch [253/300],Instance mIoU 34.12, Class mIoU 34.12, 
+ Class mIoUs tensor([34.1158], device='cuda:0')
+[10/23 03:27:43] ShapeNetPartNormal INFO: Test Epoch [254/300],Instance mIoU 34.02, Class mIoU 34.02, 
+ Class mIoUs tensor([34.0218], device='cuda:0')
+[10/23 03:31:52] ShapeNetPartNormal INFO: Test Epoch [255/300],Instance mIoU 34.05, Class mIoU 34.05, 
+ Class mIoUs tensor([34.0533], device='cuda:0')
+[10/23 03:36:01] ShapeNetPartNormal INFO: Test Epoch [256/300],Instance mIoU 34.00, Class mIoU 34.00, 
+ Class mIoUs tensor([34.0005], device='cuda:0')
+[10/23 03:40:15] ShapeNetPartNormal INFO: Test Epoch [257/300],Instance mIoU 33.94, Class mIoU 33.94, 
+ Class mIoUs tensor([33.9441], device='cuda:0')
+[10/23 03:44:14] ShapeNetPartNormal INFO: Test Epoch [258/300],Instance mIoU 33.93, Class mIoU 33.93, 
+ Class mIoUs tensor([33.9329], device='cuda:0')
+[10/23 03:48:22] ShapeNetPartNormal INFO: Test Epoch [259/300],Instance mIoU 33.97, Class mIoU 33.97, 
+ Class mIoUs tensor([33.9660], device='cuda:0')
+[10/23 03:52:28] ShapeNetPartNormal INFO: Test Epoch [260/300],Instance mIoU 34.01, Class mIoU 34.01, 
+ Class mIoUs tensor([34.0105], device='cuda:0')
+[10/23 03:56:37] ShapeNetPartNormal INFO: Test Epoch [261/300],Instance mIoU 34.20, Class mIoU 34.20, 
+ Class mIoUs tensor([34.1970], device='cuda:0')
+[10/23 04:00:47] ShapeNetPartNormal INFO: Test Epoch [262/300],Instance mIoU 34.34, Class mIoU 34.34, 
+ Class mIoUs tensor([34.3411], device='cuda:0')
+[10/23 04:04:59] ShapeNetPartNormal INFO: Test Epoch [263/300],Instance mIoU 34.61, Class mIoU 34.61, 
+ Class mIoUs tensor([34.6084], device='cuda:0')
+[10/23 04:09:14] ShapeNetPartNormal INFO: Test Epoch [264/300],Instance mIoU 34.55, Class mIoU 34.55, 
+ Class mIoUs tensor([34.5508], device='cuda:0')
+[10/23 04:13:25] ShapeNetPartNormal INFO: Test Epoch [265/300],Instance mIoU 34.63, Class mIoU 34.63, 
+ Class mIoUs tensor([34.6266], device='cuda:0')
+[10/23 04:17:29] ShapeNetPartNormal INFO: Test Epoch [266/300],Instance mIoU 34.55, Class mIoU 34.55, 
+ Class mIoUs tensor([34.5508], device='cuda:0')
+[10/23 04:21:36] ShapeNetPartNormal INFO: Test Epoch [267/300],Instance mIoU 34.72, Class mIoU 34.72, 
+ Class mIoUs tensor([34.7246], device='cuda:0')
+[10/23 04:25:52] ShapeNetPartNormal INFO: Test Epoch [268/300],Instance mIoU 34.52, Class mIoU 34.52, 
+ Class mIoUs tensor([34.5236], device='cuda:0')
+[10/23 04:29:51] ShapeNetPartNormal INFO: Test Epoch [269/300],Instance mIoU 34.72, Class mIoU 34.72, 
+ Class mIoUs tensor([34.7199], device='cuda:0')
+[10/23 04:33:58] ShapeNetPartNormal INFO: Test Epoch [270/300],Instance mIoU 37.77, Class mIoU 37.77, 
+ Class mIoUs tensor([37.7747], device='cuda:0')
+[10/23 04:38:05] ShapeNetPartNormal INFO: Test Epoch [271/300],Instance mIoU 37.66, Class mIoU 37.66, 
+ Class mIoUs tensor([37.6587], device='cuda:0')
+[10/23 04:42:06] ShapeNetPartNormal INFO: Test Epoch [272/300],Instance mIoU 37.30, Class mIoU 37.30, 
+ Class mIoUs tensor([37.3007], device='cuda:0')
+[10/23 04:46:12] ShapeNetPartNormal INFO: Test Epoch [273/300],Instance mIoU 37.30, Class mIoU 37.30, 
+ Class mIoUs tensor([37.3017], device='cuda:0')
+[10/23 04:50:08] ShapeNetPartNormal INFO: Test Epoch [274/300],Instance mIoU 37.42, Class mIoU 37.42, 
+ Class mIoUs tensor([37.4241], device='cuda:0')
+[10/23 04:54:13] ShapeNetPartNormal INFO: Test Epoch [275/300],Instance mIoU 37.43, Class mIoU 37.43, 
+ Class mIoUs tensor([37.4277], device='cuda:0')
+[10/23 04:58:14] ShapeNetPartNormal INFO: Test Epoch [276/300],Instance mIoU 37.21, Class mIoU 37.21, 
+ Class mIoUs tensor([37.2053], device='cuda:0')
+[10/23 05:02:29] ShapeNetPartNormal INFO: Test Epoch [277/300],Instance mIoU 37.22, Class mIoU 37.22, 
+ Class mIoUs tensor([37.2222], device='cuda:0')
+[10/23 05:06:37] ShapeNetPartNormal INFO: Test Epoch [278/300],Instance mIoU 37.23, Class mIoU 37.23, 
+ Class mIoUs tensor([37.2275], device='cuda:0')
+[10/23 05:10:45] ShapeNetPartNormal INFO: Test Epoch [279/300],Instance mIoU 37.23, Class mIoU 37.23, 
+ Class mIoUs tensor([37.2329], device='cuda:0')
+[10/23 05:14:52] ShapeNetPartNormal INFO: Test Epoch [280/300],Instance mIoU 37.23, Class mIoU 37.23, 
+ Class mIoUs tensor([37.2349], device='cuda:0')
+[10/23 05:18:58] ShapeNetPartNormal INFO: Test Epoch [281/300],Instance mIoU 37.24, Class mIoU 37.24, 
+ Class mIoUs tensor([37.2380], device='cuda:0')
+[10/23 05:23:03] ShapeNetPartNormal INFO: Test Epoch [282/300],Instance mIoU 37.24, Class mIoU 37.24, 
+ Class mIoUs tensor([37.2377], device='cuda:0')
+[10/23 05:27:12] ShapeNetPartNormal INFO: Test Epoch [283/300],Instance mIoU 37.24, Class mIoU 37.24, 
+ Class mIoUs tensor([37.2375], device='cuda:0')
+[10/23 05:31:20] ShapeNetPartNormal INFO: Test Epoch [284/300],Instance mIoU 37.24, Class mIoU 37.24, 
+ Class mIoUs tensor([37.2402], device='cuda:0')
+[10/23 05:35:28] ShapeNetPartNormal INFO: Test Epoch [285/300],Instance mIoU 37.24, Class mIoU 37.24, 
+ Class mIoUs tensor([37.2403], device='cuda:0')
+[10/23 05:39:39] ShapeNetPartNormal INFO: Test Epoch [286/300],Instance mIoU 37.24, Class mIoU 37.24, 
+ Class mIoUs tensor([37.2386], device='cuda:0')
+[10/23 05:43:49] ShapeNetPartNormal INFO: Test Epoch [287/300],Instance mIoU 37.24, Class mIoU 37.24, 
+ Class mIoUs tensor([37.2394], device='cuda:0')
+[10/23 05:47:46] ShapeNetPartNormal INFO: Test Epoch [288/300],Instance mIoU 37.12, Class mIoU 37.12, 
+ Class mIoUs tensor([37.1155], device='cuda:0')
+[10/23 05:51:56] ShapeNetPartNormal INFO: Test Epoch [289/300],Instance mIoU 37.12, Class mIoU 37.12, 
+ Class mIoUs tensor([37.1154], device='cuda:0')
+[10/23 05:56:05] ShapeNetPartNormal INFO: Test Epoch [290/300],Instance mIoU 37.11, Class mIoU 37.11, 
+ Class mIoUs tensor([37.1149], device='cuda:0')
+[10/23 06:00:08] ShapeNetPartNormal INFO: Test Epoch [291/300],Instance mIoU 37.12, Class mIoU 37.12, 
+ Class mIoUs tensor([37.1183], device='cuda:0')
+[10/23 06:04:14] ShapeNetPartNormal INFO: Test Epoch [292/300],Instance mIoU 37.12, Class mIoU 37.12, 
+ Class mIoUs tensor([37.1188], device='cuda:0')
+[10/23 06:08:22] ShapeNetPartNormal INFO: Test Epoch [293/300],Instance mIoU 37.12, Class mIoU 37.12, 
+ Class mIoUs tensor([37.1191], device='cuda:0')
+[10/23 06:12:19] ShapeNetPartNormal INFO: Test Epoch [294/300],Instance mIoU 37.12, Class mIoU 37.12, 
+ Class mIoUs tensor([37.1197], device='cuda:0')
+[10/23 06:16:15] ShapeNetPartNormal INFO: Test Epoch [295/300],Instance mIoU 37.12, Class mIoU 37.12, 
+ Class mIoUs tensor([37.1187], device='cuda:0')
+[10/23 06:20:23] ShapeNetPartNormal INFO: Test Epoch [296/300],Instance mIoU 37.12, Class mIoU 37.12, 
+ Class mIoUs tensor([37.1197], device='cuda:0')
+[10/23 06:24:35] ShapeNetPartNormal INFO: Test Epoch [297/300],Instance mIoU 37.12, Class mIoU 37.12, 
+ Class mIoUs tensor([37.1193], device='cuda:0')
+[10/23 06:28:41] ShapeNetPartNormal INFO: Test Epoch [298/300],Instance mIoU 37.12, Class mIoU 37.12, 
+ Class mIoUs tensor([37.1180], device='cuda:0')
+[10/23 06:32:50] ShapeNetPartNormal INFO: Test Epoch [299/300],Instance mIoU 37.12, Class mIoU 37.12, 
+ Class mIoUs tensor([37.1184], device='cuda:0')
+[10/23 06:36:58] ShapeNetPartNormal INFO: Test Epoch [300/300],Instance mIoU 37.12, Class mIoU 37.12, 
+ Class mIoUs tensor([37.1176], device='cuda:0')
+[10/23 06:36:58] ShapeNetPartNormal INFO: Best Epoch 150,Instance mIoU 38.40, Class mIoU 38.40, 
+ Class mIoUs tensor([38.4012], device='cuda:0'),
+ now lr 1.0000000000000003e-05
+[10/23 06:36:58] ShapeNetPartNormal INFO: Successful Loading the ckpt from log/shapenetpart/shapenetpart-train-pointnext-s-ngpus1-seed171-20241022-100411-kXa9X7Gq2ssq8doZvszZwj/checkpoint/shapenetpart-train-pointnext-s-ngpus1-seed171-20241022-100411-kXa9X7Gq2ssq8doZvszZwj_ckpt_best.pth
+[10/23 06:36:58] ShapeNetPartNormal INFO: ckpts @ 150 epoch( {} )
+[10/23 06:42:49] ShapeNetPartNormal INFO: Test Epoch [300/300],Instance mIoU 38.49, Class mIoU 38.49, 
+ Class mIoUs tensor([38.4915], device='cuda:0')
+[10/23 06:42:49] ShapeNetPartNormal INFO: ---Voting---
+Best Epoch 150,Voting Instance mIoU 38.49, Voting Class mIoU 38.49, 
+ Voting Class mIoUs tensor([38.4915], device='cuda:0')

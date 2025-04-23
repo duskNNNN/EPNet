@@ -1,0 +1,17 @@
+argparse
+easydict
+h5py
+matplotlib
+numpy==1.26.4
+opencv-python
+pyyaml
+scipy
+tensorboardX
+timm==0.4.5
+tqdm
+termcolor
+pandas
+ninja
+ftfy
+regex
+einops
