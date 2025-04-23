@@ -7,7 +7,7 @@ Efficient Part Segmentation for Dense Point Clouds</h1>
 Zhejiang University of Technology
 
 (*) equal contribution
-
+</div>
 ![](https://p.sda1.dev/21/714995104f8cab962bb744716edb211f/fig1.png)
 
 ## Abstract
