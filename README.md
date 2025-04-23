@@ -1,5 +1,19 @@
-# EPNet: Efficient Part Segmentation for Dense Point Clouds
+<div align="center">
+<h1>EPNet: <br>
+Efficient Part Segmentation for Dense Point Clouds</h1>
+
+[Cheng Wang](https://github.com/duskNNNN) , Wulong Hu , Minqian Wang, Zhenbo Cheng ,Yuanming Zhang, Fei Gao<sup>*</sup>
+
+Zhejiang University of Technology
+
+(*) equal contribution
+
 ![](https://p.sda1.dev/21/714995104f8cab962bb744716edb211f/fig1.png)
+
+## Abstract
+
+The segmentation of dense point clouds from industrial LiDAR scans presents challenges in computational overhead and VRAM usage, hindering the development of automated fast measurement systems. To address this, we propose EPNet, an efficient model for part segmentation of dense point clouds. EPNet employs a U-Net-like architecture with skip connections to merge original and recovered features, enhancing local feature extraction via KNN and cosine similarity. Factorization-dimensionality-reduction module based on self-attention overcomes the limitations of trilinear interpolation in feature recovery, improving both local and global feature fusion. In experiments on the LVPC dataset of dense vehicle point clouds, EPNet outperforms models from the past three years, achieving a 1.7\% accuracy improvement and a 9.7\% increase in average Instance IoU compared to PointNet++. EPNet also achieves a single-file inference time of under 1 second while requiring minimal GPU VRAM resources, demonstrating its potential for real-world industrial high-precision fast automated measurements. 
+
 ## Architecture
 ![](https://p.sda1.dev/21/7dcd70f2a367e4f05aaafc5ca441ffa2/fig2.png)
 ## Install
