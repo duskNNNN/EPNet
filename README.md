@@ -1,7 +1,6 @@
 <div align="center">
 <h1>EPNet: <br>
 Efficient Part Segmentation for Dense Point Clouds</h1>
-
 [Cheng Wang](https://github.com/duskNNNN) , Wulong Hu , Minqian Wang, Zhenbo Cheng ,Yuanming Zhang, Fei Gao<sup>*</sup>
 
 Zhejiang University of Technology
@@ -11,14 +10,14 @@ Zhejiang University of Technology
 
 
 
-![](https://p.sda1.dev/21/714995104f8cab962bb744716edb211f/fig1.png)
+![](assets/fig1.png)
 
 ## Abstract
 
-The segmentation of dense point clouds from industrial LiDAR scans presents challenges in computational overhead and VRAM usage, hindering the development of automated fast measurement systems. To address this, we propose EPNet, an efficient model for part segmentation of dense point clouds. EPNet employs a U-Net-like architecture with skip connections to merge original and recovered features, enhancing local feature extraction via KNN and cosine similarity. Factorization-dimensionality-reduction module based on self-attention overcomes the limitations of trilinear interpolation in feature recovery, improving both local and global feature fusion. In experiments on the LVPC dataset of dense vehicle point clouds, EPNet outperforms models from the past three years, achieving a 1.7\% accuracy improvement and a 9.7\% increase in average Instance IoU compared to PointNet++. EPNet also achieves a single-file inference time of under 1 second while requiring minimal GPU VRAM resources, demonstrating its potential for real-world industrial high-precision fast automated measurements. 
+The segmentation of dense point clouds from industrial LiDAR scans presents challenges in computational overhead and VRAM usage, hindering the development of automated fast measurement systems. To address this, we propose EPNet, an efficient model for part segmentation of dense point clouds. EPNet employs a U-Net-like architecture with skip connections to merge original and recovered features, enhancing local feature extraction via KNN and cosine similarity. Factorization-dimensionality-reduction module based on self-attention overcomes the limitations of trilinear interpolation in feature recovery, improving both local and global feature fusion. In experiments on the LVPC dataset of dense vehicle point clouds, EPNet outperforms models from the past three years, achieving a 1.7% accuracy improvement and a 9.7% increase in average Instance IoU compared to PointNet++. EPNet also achieves a single-file inference time of under 1 second while requiring minimal GPU VRAM resources, demonstrating its potential for real-world industrial high-precision fast automated measurements. 
 
 ## Architecture
-![](https://p.sda1.dev/21/7dcd70f2a367e4f05aaafc5ca441ffa2/fig2.png)
+![](assets/fig2.png)
 ## Install
 ```shell
 conda env create -f py38.yaml
@@ -121,4 +120,31 @@ You should set `batch-size` to 1. After running, use `Cloudcompare` to view the 
 python test_partseg_save.py --cfg config/ShapeNetPart/test_LVPC_save.json
 ```
 
-![](https://p.sda1.dev/21/3f1f51b0435e3df9de5cb69c0afb410c/fig6.png)
+![](assets/fig7.png)
+
+## Acknowledgements
+
+Our codes are built upon [PointNet++](https://github.com/yanx27/Pointnet_Pointnet2_pytorch), [ACT](https://github.com/RunpeiDong/ACT), [PAConv](https://github.com/CVMI-Lab/PAConv), [Point-BERT](https://github.com/Julie-tang00/Point-BERT), [Point-M2AE](https://github.com/ZrrSkywalker/Point-M2AE), [Point-MAE](https://github.com/Pang-Yatian/Point-MAE), [Point-Transformer](https://github.com/POSTECH-CVLab/point-transformer), [PointCloucMamba](https://github.com/SkyworkAI/PointCloudMamba), [PointGPT](https://github.com/CGuangyan-BIT/PointGPT), [PointMamba](https://github.com/LMD0311/PointMamba), [PointMLP](https://github.com/ma-xu/pointMLP-pytorch), [PointNeXt](https://github.com/guochengqian/PointNeXt), [PointRWKV](https://github.com/hithqd/PointRWKV), [ReCon](https://github.com/qizekun/ReCon), [ShapeLLM](https://github.com/qizekun/ShapeLLM), [SPoTr](https://github.com/mlvlab/SPoTr) and [TAP](https://github.com/wangzy22/TAP).
+
+## Reference
+
+```
+@inproceedings{10.1145/3731715.3733329,
+author = {Wang, Cheng and Hu, Wulong and Wang, Minqian and Cheng, Zhenbo and Zhang, Yuanming and Gao, Fei},
+title = {EPNet: Efficient Part Segmentation for Dense Point Clouds},
+year = {2025},
+isbn = {9798400718779},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3731715.3733329},
+doi = {10.1145/3731715.3733329},
+abstract = {The segmentation of dense point clouds from industrial LiDAR scans presents challenges in computational overhead and VRAM usage, hindering the development of automated fast measurement systems. To address this, we propose EPNet, an efficient model for part segmentation of dense point clouds. EPNet employs a U-Net-like architecture with skip connections to merge original and recovered features, enhancing local feature extraction via KNN and cosine similarity. Factorization-dimensionality-reduction module based on self-attention overcomes the limitations of trilinear interpolation in feature recovery, improving both local and global feature fusion. In experiments on the LVPC dataset of dense vehicle point clouds, EPNet outperforms models from the past three years, achieving a 1.7\% accuracy improvement and a 9.7\% increase in average Instance IoU compared to PointNet++. EPNet also achieves a single-file inference time of under 1 second while requiring minimal GPU VRAM resources, demonstrating its potential for real-world industrial high-precision fast automated measurements. The code is available at https://github.com/duskNNNN/EPNet.},
+booktitle = {Proceedings of the 2025 International Conference on Multimedia Retrieval},
+pages = {1358–1366},
+numpages = {9},
+keywords = {dense point cloud, efficient, industrial automation measurement, part segmentation, pointnet++},
+location = {Chicago, IL, USA},
+series = {ICMR '25}
+}
+```
+
