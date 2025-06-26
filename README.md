@@ -1,7 +1,8 @@
 <div align="center">
 <h1>EPNet: <br>
 Efficient Part Segmentation for Dense Point Clouds</h1>
-[Cheng Wang](https://github.com/duskNNNN) , Wulong Hu , Minqian Wang, Zhenbo Cheng ,Yuanming Zhang, Fei Gao<sup>*</sup>
+Cheng Wang, Wulong Hu , Minqian Wang, Zhenbo Cheng ,Yuanming Zhang, Fei Gao<sup>*</sup>
+
 
 Zhejiang University of Technology
 
