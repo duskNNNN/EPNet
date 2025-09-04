@@ -25,7 +25,7 @@ conda env create -f py38.yaml
 pip install -r requirements.txt
 ```
 ## Datasets
-**LVPC Dataset:** Download the offical data from [here](https://pan.baidu.com/s/1CUJvMX2bt8kKthb717pr1Q?pwd=s8hs). Unzip the file under `data/PartSeg/LVPC/`.
+**LVPC Dataset:** Download the offical data from [here](https://pan.baidu.com/s/1Yv5z_tPm73GgI0-6K9AHbw?pwd=mab5). Unzip the file under `data/PartSeg/LVPC/`.
 
  The directory structure should be
 
@@ -148,4 +148,5 @@ location = {Chicago, IL, USA},
 series = {ICMR '25}
 }
 ```
+
 
